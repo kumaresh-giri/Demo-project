@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Code Red Pizza</title>
+    <base href="/" />
+    <!--<base href="https://dev8.ivantechnology.in/code_red_pizza/web/">-->
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="icon" type="image/x-icon" href="assets/images/favicon.ico" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800&display=swap" rel="stylesheet"/>
+    <meta name="google-signin-scope" content="profile email" />
+    <meta name="google-signin-client_id" content="300909283932-jk0vrqjb49qj9u034rad180l4d9aavsr.apps.googleusercontent.com"/>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC-1NczEtQqYZCz_tMQDvsuTlOQq7lbnhA&libraries=places&language=en"></script>
+    <script src="https://apis.google.com/js/platform.js" async defer></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script>
+    $(document).click(function() {
+      $(".close-item-link" ).click(function(){
+        if($("#navbarNav").hasClass("show")) {
+          $("#navbarNav" ).removeClass("show");
+        }
+      });
+    }); 
+  </script>
+  </head>
+  <body>
+    <app-root></app-root>
+  </body>
+</html>

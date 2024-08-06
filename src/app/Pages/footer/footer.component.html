@@ -1,0 +1,63 @@
+<div class="social-links">
+  <span *ngIf="footerSettingContent?.facebook_link"><a target="_blank" href="{{ footerSettingContent?.facebook_link }}"><i class="bi bi-facebook"></i></a></span>
+  <span *ngIf="footerSettingContent?.twitter_link"><a target="_blank" href="{{ footerSettingContent?.twitter_link }}"><i class="bi bi-twitter"></i></a></span>
+  <span *ngIf="footerSettingContent?.instagram_link"><a target="_blank" href="{{ footerSettingContent?.instagram_link }}"><i class="bi bi-instagram"></i></a></span>
+</div>
+<ul class="footer-menu">
+  <li><a routerLink="/menu">MENU </a></li>
+  <li><a href="javascript:void(0);" (click)="setSigntaureCustomPizzaTab('signature')">ORDER ONLINE</a></li>
+  <li><a routerLink="/location">LOCATIONS</a></li>
+  <li><a routerLink="/become-a-code-enforcer">BECOME A CODE ENFORCER </a></li>
+  <li><a routerLink="/review">REVIEWS</a></li>
+  <li class="login-icon" *ngIf="isLoggedInuser===false"><a href="javascript:void(0);" (click)="initLogin()">SIGNUP/LOGIN</a></li>
+  <!-- <li *ngIf="isLoggedInuser === false">
+    <a routerLink="/review">SIGNUP/LOGIN</a>
+  </li> -->
+  <li><a href="{{footerSettingContent?.shop_link}}" target="_blank">SHOP</a></li>
+</ul>
+<div class="quick-links">
+  <a routerLink="/privacy-policy">Privacy Policy</a> | <a routerLink="/refund-policy">Refund Policy</a>
+</div>
+<p class="copyright m-0">
+  © 2022 Code Red Pizza. All rights reserved. | Designed and developed by
+  <a href="https://www.ivanwebsolutions.com/" target="_blank">Ivan Infotech</a>
+</p>
+<!-- login signup modal-->
+<div
+  class="modal fade"
+  id="footerLoginSignupModal"
+  tabindex="-1"
+  aria-labelledby="exampleModalLabel"
+  aria-hidden="true"
+>
+<div  class="modal-dialog login-modal modal-dialog-centered">
+  <div class="modal-content">
+    <button  type="button" 
+      id="closeAddExpenseModal"
+      #closeAddExpenseModal
+      class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+    </button>
+    <div class="modal-body login-wrapper d-flex justify-content-center p-0">
+      <div class="login-img">
+        <img src="assets/images/login.jpg" alt=""/>
+      </div>
+      
+      <ng-container *ngIf="isShowLoginSectionForm===true">
+        <div class="row m-0 py-4 align-items-center">
+          <app-login></app-login>
+          <div class="text-center py-3">
+            <a href="javascript:void(0);"  (click)="setloginSignup(1);">New to Code Red Pizza? Create an account</a>
+          </div>
+        </div>
+      </ng-container>
+      <ng-container *ngIf="isShowSignupSectionForm===true">
+        <div class="row m-0 py-4 align-items-center">
+          <app-signup></app-signup>
+          <div class="text-center py-3">
+            <a href="javascript:void(0);"  (click)="setloginSignup(0);">Already have account? Please Login</a>
+          </div>
+        </div>
+      </ng-container>
+    </div>
+  </div>
+</div>  

@@ -1,0 +1,14 @@
+<div class="inner-title">
+    <h1 *ngIf="!cmsContent?.cms_desc && isShowLoader == 0">{{cmsContent?.cms_name}}</h1>
+</div>
+<div class="location-wrapper c-padd inner-height">
+    <div class="row" *ngIf="cmsContent?.cms_desc">
+        <div class="col-md-12" [innerHTML]="cmsContent?.cms_desc"></div>
+    </div>
+    <div class="row" *ngIf="!cmsContent?.cms_desc && isShowLoader == 0">
+        <div class="col-md-12 no-data">
+            No Data Available
+        </div>
+    </div>
+</div>
+  

@@ -1,0 +1,39 @@
+<div class="modal-dialog login-modal modal-dialog-centered">
+    <div class="modal-content">
+      <button  type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" (click)="closeLoginModal();"></button>
+      <div class="modal-body login-wrapper d-flex align-items-center p-0">
+        <div class="login-img">
+          <h2>Crop Image</h2>
+          <image-cropper 
+                [imageChangedEvent]="imageChangedEvent" 
+                [maintainAspectRatio]="true" 
+                [aspectRatio]="1 / 1"
+                [resizeToWidth]="256" 
+                format="png" 
+                (imageCropped)="imageCropped($event)" 
+                (imageLoaded)="imageLoaded()"
+                (cropperReady)="cropperReady()" 
+                (loadImageFailed)="loadImageFailed()"></image-cropper>
+        </div>
+        <div class="login-box">
+          <ng-container>
+            <form [formGroup]="profilePicForm" (ngSubmit)="profilePicFormSubmit()">
+              <h2>Edit Profile Picture</h2>
+              <div class="mb-3">
+                <label class="form-label">Image</label>
+                <input type="file" (change)="fileChangeEvent($event)" />
+              </div>
+              <div class="mb-3">
+                <label class="form-label">Preview Image</label>
+                <img [src]="croppedImage" />
+              </div>
+              <div class="mb-3">
+                <button type="submit" class="btn btn-danger">Update Profile Picture</button>
+              </div>
+            </form>
+          </ng-container>
+        </div>
+      </div>
+    </div>
+  </div>
+  

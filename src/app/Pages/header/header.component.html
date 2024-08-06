@@ -1,0 +1,103 @@
+<header>
+  <div class="container">
+    <div class="h-right">
+      <span *ngIf="isShowAddressEditInput==0" (click)="makeEditableHeaderDeliveryLocation();"><i
+          class="bi bi-cursor-fill"></i><span *ngIf="headerAddress;"> Ordering for Delivery to {{
+          (headerAddress.length>30)? (headerAddress | slice:0:30)+'...':(headerAddress) }} </span><span
+          *ngIf="!headerAddress"> Set address for delivery</span>
+      </span>
+      <span *ngIf="isShowAddressEditInput==1" style="margin-left: 0px;">
+        <form [formGroup]="headerDeliveryAddressForm">
+          <div class="">
+            <input type="text" formControlName="headerdeliveryaddress" class="form-control"
+              placeholder="Enter your location for delivery" ngx-google-places-autocomplete
+              (onAddressChange)="handleHeaderDeliveryAddressChange($event)" />
+          </div>
+        </form>
+      </span>
+      <span style="display:none;"><i class="bi bi-clock"></i> 12:00 PM</span>
+    </div>
+    <nav class="navbar navbar-expand-lg">
+      <div class="container-fluid">
+        <a class="navbar-brand design-logo" routerLink="/">
+          <img src="assets/images/logo.png" alt="" />
+          <img src="assets/images/logo-text.png" alt="" class="sublogo" />
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+          aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"><i class="bi bi-justify"></i></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav ml-auto align-items-center">
+            <li class="nav-item close-item-link"><a class="nav-link "
+              [class]="headerMenuSlug=='custom'  ? 'active':''"
+              (click)="setActiveMenu('custom');" routerLink="/customizepizza/custom"
+              (click)="setSigntaureCustomPizzaTab('custom');">What's Your Code</a></li>
+            <li class="nav-item close-item-link"><a class="nav-link "
+                [class]="headerMenuSlug=='signature'  ? 'active':''"
+                (click)="setActiveMenu('signature');" routerLink="/customizepizza/signature"
+                (click)="setSigntaureCustomPizzaTab('signature');">Signature Pizzas</a></li>
+            <li class="nav-item close-item-link"><a class="nav-link" [class]="headerMenuSlug=='salads' ? 'active':''"
+                (click)="setActiveMenu('salads');" routerLink="/category/salads">Salads</a></li>
+            <li class="nav-item close-item-link"><a class="nav-link" [class]="headerMenuSlug=='treats' ? 'active':''"
+                (click)="setActiveMenu('treats');" routerLink="/category/treats">Treats</a></li>
+            <li class="nav-item"><a class="nav-link close-item-link" [class]="headerMenuSlug=='drinks' ? 'active':''"
+                  (click)="setActiveMenu('drinks');" routerLink="/category/drinks">Drinks</a></li>
+
+
+                  <li class="nav-item cart-icon">
+                    <a class="nav-link" routerLink="/main-cart"><img src="assets/images/cart.png" alt=""/></a>
+                  </li>
+  
+          </ul>
+          <ul class="navbar-nav mr-auto pt-0"> 
+            <li class="nav-item close-item-link" *ngIf="isLoggedInuser===false">
+              <a href="javascript:void(0);" (click)="initLogin()"><i class="bi bi-person-fill"></i> </a>
+            </li>
+            <li class="nav-item user-nav " style="position:relative;" *ngIf="isLoggedInuser===true">
+              <a href="#" class="nav-link" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false"><i class="bi bi-person-fill"></i></a>
+              <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                <li><a class="dropdown-item close-item-link" routerLink="/dashboard">Dashboard</a></li>
+                <li><a class="dropdown-item close-item-link" routerLink="/my-order"> My Order</a></li>
+                <li><a class="dropdown-item close-item-link" routerLink="/profile"> My Profile</a></li>
+                <li><a class="dropdown-item close-item-link" routerLink="/change-password"> Change Password</a></li>
+                <li><a href='javascript:void(0);' class="dropdown-item" (click)="logout()"> Logout</a></li>
+              </ul>
+            </li>
+          </ul>
+          <div class="login-area ms-auto">
+          </div>
+        </div>
+      </div>
+    </nav>
+  </div>
+</header>
+<div class="modal fade" id="loginSignupModalHeader" tabindex="-1" aria-labelledby="exampleModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog login-modal modal-dialog-centered">
+    <div class="modal-content">
+      <button type="button" id="closeAddExpenseModalHeader" #closeAddExpenseModal class="btn-close"
+        data-bs-dismiss="modal" aria-label="Close"></button>
+      <div class="modal-body login-wrapper d-flex p-0">
+        <div class="login-img">
+          <img src="assets/images/login.jpg" alt="" />
+        </div>
+        <ng-container *ngIf="isShowLoginSectionForm===true">
+          <div class="row m-0 py-4 align-items-center">
+            <app-login></app-login>
+            <div class="b-area">
+              New to Code Red Pizza? <a href="javascript:void(0);" (click)="setloginSignup(1);">Create an account</a>
+            </div>
+          </div>
+        </ng-container>
+        <ng-container *ngIf="isShowSignupSectionForm===true">
+          <div class="row m-0 py-4 align-items-center">
+            <app-signup></app-signup>
+            <div class="b-area">
+              Already have account? <a href="javascript:void(0);" (click)="setloginSignup(0);">Please Login</a>
+            </div>
+          </div>
+        </ng-container>
+      </div>
+    </div>
+  </div>

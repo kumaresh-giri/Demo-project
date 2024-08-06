@@ -1,0 +1,126 @@
+<div class="login-box">
+  <ng-container *ngIf="isShowSignUp === true" >
+   
+      <form [formGroup]="signupForm" id="signupForm" (ngSubmit)="signupFormSubmit()">
+      <h2>Signup</h2>
+      <div class="row">
+          <div class="col-lg-6">
+            <div class="mb-3">
+              <label class="form-label">Name<span class="text-danger">*</span></label>
+              <input type="text" class="form-control" formControlName="user_name" />
+              <div *ngIf="isSubmitted && f.user_name.errors" class="invalid-feedback" style="display:block">
+                <div *ngIf="f.user_name.errors.required">Please enter name.</div>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-6">
+            <div class="mb-3">
+              <label class="form-label">Email<span class="text-danger">*</span></label>
+              <input type="text" class="form-control" formControlName="email_id"  />
+              <div *ngIf="isSubmitted && f.email_id.errors" class="invalid-feedback" style="display:block" >
+                <div *ngIf="f.email_id.errors.required">Please enter email.</div>
+                <div *ngIf="f.email_id.errors.email">Email must be a valid email address</div>
+              </div>
+            </div>
+          </div>
+        </div>  
+      <div class="row">
+        <div class="col-lg-6">
+          <div class="mb-3">
+            <label class="form-label">Password<span class="text-danger">*</span></label>
+            <div class="password-btn">
+              <input [type]="isShowPasswordEye ? 'text' : 'password'" class="form-control" formControlName="password"   />
+              <i
+              (click)="togglePassword()"
+              class="fa"
+              style="cursor: pointer"
+              [ngClass]="{
+                'fa-eye': isShowPasswordEye,
+                'fa-eye-slash': !isShowPasswordEye
+              }"
+            ></i>
+          </div>
+            <div *ngIf="isSubmitted && f.password.errors" class="invalid-feedback" style="display:block">
+              <div *ngIf="f.password.errors.required">Please enter password.</div>
+              <div *ngIf="f.password.errors.minlength">Must be 8 charcters in length.</div>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-6">           
+          <div class="mb-3">
+            <label class="form-label">Confirm Password<span class="text-danger">*</span></label>
+            <div class="password-btn">
+            <input [type]="isShowConfrimPasswordEye ? 'text' : 'password'" class="form-control" formControlName="confirm_password"  />
+            <i
+            (click)="toggleConfirmPassword()"
+            class="fa"
+            style="cursor: pointer"
+            [ngClass]="{
+              'fa-eye': isShowConfrimPasswordEye,
+              'fa-eye-slash': !isShowConfrimPasswordEye
+            }"
+          ></i>
+          </div>
+            <div *ngIf="isSubmitted && f.confirm_password.errors" class="invalid-feedback" style="display:block" >
+              <div *ngIf="f.confirm_password.errors.required">Please enter confirm password.</div>
+              <div *ngIf="f.confirm_password.errors.mustMatch">Password & confirm password must be same</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="mb-3">
+        <ngx-recaptcha2
+            #captchaElem
+            [siteKey]="this.captchaSiteKey"
+            formControlName="recaptcha"
+          >
+        </ngx-recaptcha2> 
+          <div *ngIf="isSubmitted && f.recaptcha.errors" class="invalid-feedback" style="display:block" >
+              <div *ngIf="f.recaptcha.errors.required">Please enter recaptcha.</div>
+              </div>
+      </div>     
+      <div class="mb-3">
+        <button type="submit"  class="btn btn-danger">
+          Create an account
+        </button>
+      </div>
+      <hr>
+      <!-- <a href="#" data-bs-toggle="modal" data-bs-target="#loginModal" style="color: #999;">Login</a> -->
+      <app-social-login></app-social-login>
+      <!-- <hr />
+      <button class="loginBtn loginBtn--facebook">Login with Facebook</button>
+      <button class="loginBtn loginBtn--google">Login with Google</button> -->
+    </form>
+  </ng-container>
+  <ng-container *ngIf="isShowSignUp === false">
+    <form [formGroup]="verifyEmailForm" (ngSubmit)="verifyEmailFormSubmit()">
+      <h2>Verify Email</h2>
+      <div class="mb-3">
+        <label class="form-label">OTP<span class="text-danger">*</span></label>
+        <input type="text" class="form-control" formControlName="otp"    />
+        <div *ngIf="isVerifyEmailSubmitted && fve.otp.errors" class="invalid-feedback" style="display:block">
+          <div *ngIf="fve.otp.errors.required">Please enter otp.</div>
+        </div>
+      </div>
+      <div class="mb-3">
+        <ngx-recaptcha2
+            #captchaElem
+            [siteKey]="this.captchaSiteKey"
+            formControlName="verecaptcha"
+          >
+        </ngx-recaptcha2> 
+          <div *ngIf="isVerifyEmailSubmitted && fve.verecaptcha.errors" class="invalid-feedback" style="display:block" >
+              <div *ngIf="fve.verecaptcha.errors.required">Please enter recaptcha.</div>
+              </div>
+      </div> 
+      <div class="mb-3">
+        <button type="submit"  class="btn btn-danger">
+          Verify
+        </button>
+        <button type="button" (click)="resendOtp()"  class="btn btn-danger">
+          Resend OTP
+        </button>
+      </div>
+    </form>
+  </ng-container>
+</div>

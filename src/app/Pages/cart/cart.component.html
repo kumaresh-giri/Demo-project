@@ -1,0 +1,542 @@
+
+
+
+<div class="cart-sidebar" [class.toggled]="classToggled">
+  <div class="cartrightbody">
+    <button class="close-openbutton" id="sidebarToggle" 
+    (click)="toggleField()">
+      <i class="fa " [class]="classToggled ? 'fa-times':'fa-shopping-cart' "></i>
+    </button>
+    <h3>Your Order</h3>
+    <ng-container *ngIf="(allCartItems$ | async).length > 0">
+    <ng-container *ngFor="let cartItem of allCartItems$ | async; let i = index">
+        <container-element [ngSwitch]="cartItem.product_type">
+          <div class="list-pizza mb-2" *ngSwitchCase="'signature'">
+            <div class="select-title">
+              {{ cartItem?.product[0]?.product_name }}
+              <span class="ms-auto" (click)="deleteCart(cartItem?._id)"><i class="bi bi-x"></i></span>
+              <span class="ms-auto" *ngIf="cartItem?.special_instruction"  tooltip="<p>{{ cartItem?.special_instruction }}</p>"><i class="bi bi-eye"></i></span>
+            </div>
+            <div class="cart-scroll">
+              <div class="add-pizza">
+                <div class="d-flex align-items-center">
+                  <div class="">
+                    <img [src]="(cartItem?.product[0]?.product_image) ? imageBaseUrl + cartItem?.product[0]?.product_image: 'assets/images/no_pizza_image_available.jpg'" alt="" style="height: auto;" />
+                  </div>
+                  <div class="" style="width:100%;">
+                    <h4 style="padding-bottom: 5px;">{{ cartItem?.product[0]?.product_name }}</h4>
+                    <div class="d-flex align-items-center justify-content-between">
+                      <span class="">${{cartItem?.product[0]?.selling_price | number: "1.2-2"}}</span>
+                      <div class="aqtybtn" style="margin-left: 5px;">
+                        <p class="w-100" style=" font-size: 10px; margin-bottom: 3px;color: #f6061c;">Add Qty</p>
+                        <span class="ms-auto pizqty qtysec"><i class="fa fa-minus" (click)="decreaseQuantity(cartItem)"></i><button type="button">{{cartItem?.qty}}</button><i class="fa fa-plus" (click)="increaseQuantity(cartItem)"></i></span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>  
+              <div
+                *ngIf="cartItem?.product_addons?.length"
+                class="select-title gray-bg"
+                type="button"
+                data-bs-toggle="collapse"
+                [attr.data-bs-target]="'#collapsecartsignature' + i"
+                aria-expanded="false"
+                aria-controls="collapsecart">
+                Addon Item <i class="bi bi-chevron-down"></i>
+              </div>
+              <div class="show-ul collapse" id="{{ 'collapsecartsignature' + i }}">
+                <ul class="cart-list" *ngIf="cartItem?.product_addons?.length">
+                  <li class="d-flex align-items-center" *ngFor="let singlecartItemAddon of cartItem?.product_addons">
+                    <h4>{{ singlecartItemAddon?.addon_name }}</h4>
+                    <span class="ms-auto">${{singlecartItemAddon?.addon_price | number: "1.2-2"}}</span>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          <div class="list-pizza mb-2" *ngSwitchCase="'custom'">
+            <div
+              class="select-title"
+              type="button"
+              data-bs-toggle="collapse"
+              [attr.data-bs-target]="'#collapsecartcustom' + i"
+              aria-expanded="false"
+              aria-controls="collapseExample"
+            >
+              {{ cartItem?.product_name }}
+              
+              <span class="ms-auto" (click)="deleteCart(cartItem?._id)"
+                ><i class="bi bi-x"></i
+              ></span>
+              <i class="bi bi-chevron-down"></i>
+              <br />
+              <div class="pizzapty-custom d-flex align-items-center justify-content-between">
+
+              <span class=""
+                >${{ cartItem?.overallSinglePizzaPrice | number: "1.2-2" }}</span
+              >
+              
+              <div class="aqtybtn">
+                <p class="w-100" style="font-size: 10px; margin-bottom: 3px; color: #f6061c;">Add Qty</p>
+                <span class="ms-auto pizzapty2 qtysec">
+                  <i class="fa fa-minus" (click)="decreaseQuantity(cartItem)"></i>
+                  <button type="button" class="">{{cartItem?.qty}}</button><i class="fa fa-plus " (click)="increaseQuantity(cartItem)"></i>
+                </span>
+              </div>
+              
+              </div>
+            </div>
+
+
+
+
+            <div
+              class="cart-scroll"
+              class="collapse"
+              id="{{ 'collapsecartcustom' + i }}"
+            >
+              <ul class="cart-list" *ngIf="cartItem?.product_ingredients?.length">
+                <!-- <li class="select-item">White Flour</li> -->
+                <li
+                  class="d-flex align-items-center"
+                  *ngFor="
+                    let singlecartItemIngredient of cartItem?.product_ingredients;
+                    index as i
+                  "
+                >
+                  <h4>{{ singlecartItemIngredient?.product_name }}</h4>
+                  <span
+                    class="ms-auto"
+                    *ngIf="singlecartItemIngredient.selling_price!=0"
+                    >${{
+                      singlecartItemIngredient?.selling_price | number: "1.2-2"
+                    }}</span
+                  >
+                  <!-- <a class="ms-auto" href="#"><i class="bi bi-x"></i></a> -->
+                </li>
+                <!-- <li class="d-flex align-items-center">
+                              <h4>Medium Double Paneer Supreme</h4>
+                              <a class="ms-auto" href="#"><i class="bi bi-x"></i></a> 
+                          </li>
+                          <li class="d-flex align-items-center">
+                              <h4>Medium Double Paneer Supreme</h4>
+                              <a class="ms-auto" href="#"><i class="bi bi-x"></i></a> 
+                          </li> -->
+              </ul>
+            </div>
+
+          </div>
+          <div class="list-pizza mt-2" *ngSwitchDefault>
+            <div class="select-title">
+              {{ cartItem?.product[0]?.product_name }}
+              <span class="ms-auto" (click)="deleteCart(cartItem?._id)"><i class="bi bi-x"></i></span>
+            </div>
+            
+            
+            
+            <div class="cart-scroll">
+              <div class="add-pizza">
+                <div class="d-flex align-items-center">
+                  <div class="">
+                    <img [src]="(cartItem?.product[0]?.product_image) ? imageBaseUrl + cartItem?.product[0]?.product_image: 'assets/images/no_pizza_image_available.jpg'" alt="" />
+                  </div>
+                  <div class="" style="width:100%;">
+                    <h4 style="padding-bottom: 5px;">{{ cartItem?.product[0]?.product_name }}</h4>
+                    <div class="d-flex align-items-center justify-content-between">
+                      <span class="">${{cartItem?.product[0]?.selling_price | number: "1.2-2"}}</span>
+                      <div class="aqtybtn" style="margin-left: 5px;">
+                        
+                        <p class="w-100" style=" font-size: 10px; margin-bottom: 3px;color: #f6061c;">Add Qty</p>
+                        <span class="ms-auto pizqty qtysec"><i class="fa fa-minus" (click)="decreaseQuantity(cartItem)"></i><button type="button">{{cartItem?.qty}}</button><i class="fa fa-plus" (click)="increaseQuantity(cartItem)"></i></span>
+                      </div>
+                    </div>
+                  </div>
+                  <!-- <div class="" style="width:100%;">
+                    <h4>{{ cartItem?.product[0]?.product_name }}</h4>
+                    <div class="d-flex align-items-center">
+                      <span class="">${{cartItem?.product[0]?.selling_price | number: "1.2-2"}}</span>
+                      <span class="ms-auto pizqty qtysec"><i class="fa fa-minus" (click)="decreaseQuantity(cartItem)"></i><button type="button">{{cartItem?.qty}}</button><i class="fa fa-plus" (click)="increaseQuantity(cartItem)"></i></span>
+                    </div>
+                  </div> -->
+                </div>
+              </div>  
+              <!-- <div class="add-pizza">
+                <div class="d-flex align-items-center">
+                  <div class="">
+                    <img [src]="(cartItem?.product[0]?.product_image) ? imageBaseUrl + cartItem?.product[0]?.product_image: 'assets/images/no_pizza_image_available.jpg'" alt="" />
+                  </div>
+                  <div class="">
+                    <h4>{{ cartItem?.product[0]?.product_name }}</h4>
+                    <div class="d-flex align-items-center">
+                      <span class="">${{cartItem?.product[0]?.selling_price | number: "1.2-2"}}</span>
+                      <span class="ms-auto pizqty"><i class="fa fa-plus" (click)="increaseQuantity(cartItem)"></i><button type="button">{{cartItem?.qty}}</button><i class="fa fa-minus" (click)="decreaseQuantity(cartItem)"></i></span>
+                    </div>
+                  </div>
+                </div>
+              </div>   -->
+              <!-- <div class="add-pizza d-flex align-items-center">
+                <img [src]="(cartItem?.product[0]?.product_image) ? imageBaseUrl + cartItem?.product[0]?.product_image: 'assets/images/no_pizza_image_available.jpg'" alt="" />
+                <h4>{{ cartItem?.product[0]?.product_name }}</h4>
+                <span class="ms-auto"
+                  >${{
+                    cartItem?.product[0]?.selling_price | number: "1.2-2"
+                  }}</span
+                >
+                <span class="ms-auto"><i class="fas fa-plus"></i><input type="qty" id="qty" value="cartItem?.qty"><i class="fas fa-minus"></i></span>
+              </div> -->
+              <div
+                *ngIf="cartItem?.product_addons?.length"
+                class="select-title gray-bg"
+                type="button"
+                data-bs-toggle="collapse"
+                [attr.data-bs-target]="'#collapsecartsignature' + i"
+                aria-expanded="false"
+                aria-controls="collapsecart"
+              >
+                Addon Item <i class="bi bi-chevron-down"></i>
+              </div>
+              <div
+                class="show-ul collapse"
+                id="{{ 'collapsecartsignature' + i }}"
+              >
+                <ul class="cart-list" *ngIf="cartItem?.product_addons?.length">
+                  <li
+                    class="d-flex align-items-center"
+                    *ngFor="let singlecartItemAddon of cartItem?.product_addons"
+                  >
+                    <h4>{{ singlecartItemAddon?.addon_name }}</h4>
+                    <span class="ms-auto"
+                      >${{
+                        singlecartItemAddon?.addon_price | number: "1.2-2"
+                      }}</span
+                    >
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+        </container-element>
+      </ng-container>
+      <div class="cart-total">
+        <div class="total-count">
+          <h5 class="d-flex">
+            Subtotal
+            <span class="ms-auto"
+              >${{ cartSubTotal$ | async | number: "1.2-2" }}</span
+            >
+          </h5>
+          <h6 class="d-flex">
+            Restaurant Handling Charges
+            <span class="ms-auto"
+              >${{ cartResturaHandlingCharge$ | async | number: "1.2-2" }}</span
+            >
+          </h6>
+          <h5 class="d-flex">
+            Total Tax
+            <span class="ms-auto"
+              >${{ cartTotalTax$ | async | number: "1.2-2" }}</span
+            >
+          </h5>
+          <h5 class="d-flex">
+            Amount payable
+            <span class="ms-auto"
+              >${{ cartNetTotal$ | async | number: "1.2-2" }}</span
+            >
+          </h5>
+        </div>
+        <div class="total-checkout d-flex align-items-center">
+          <div class="item-cart">{{ totalCartCount$ | async }} Items</div>
+          <!-- <a href="#" class="btn">Checkout</a> -->
+          <a  
+          href="javascript:void(0);"
+            class="btn"
+            data-bs-toggle="modal" data-bs-target="#checkoutModal"
+            style="color: #999"
+          (click)="setCheckoutUserDetails();"
+            >Checkout</a
+          >
+          <div class="total-price ms-auto">
+            ${{ cartNetTotal$ | async | number: "1.2-2" }}
+          </div>
+        </div>
+      </div>
+
+      <!-- <div class="list-pizza" >
+        <ul>
+          <li><a class="" routerLink="/category/salads">Salads</a></li>
+          <li><a class="" routerLink="/category/treats">Treats</a></li>
+        
+          
+        </ul>
+      </div> -->
+    </ng-container>
+    <ng-container *ngIf="(allCartItems$ | async).length == 0">
+      <div class="cart-total">
+        <div class="total-checkout">
+          <div class="text-center text-white align-items-center">
+            <span class="text-center">Your cart is empty</span>
+            
+          </div>
+        </div>
+      </div>
+    </ng-container>
+    <ng-container>
+      <div class="mt-0">
+        <ul class="liststyle">
+          <li><a class="" routerLink="/category/salads">Add Salads</a></li>
+          <li><a class="" routerLink="/category/treats">Add Treats</a></li>
+          <li><a class="" routerLink="/category/drinks">Add Drinks</a></li>
+        </ul>
+      </div>
+    </ng-container>
+    <div
+      class="modal fade"
+      id="checkoutModal"
+      tabindex="-1"
+      aria-labelledby="loginModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog login-modal modal-dialog-centered">
+        <div class="modal-content">
+          <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="modal"
+            aria-label="Close"
+          ></button>
+          
+          <ng-container >
+          <div class="modal-header">
+            <h5 class="modal-title">Delivery Address</h5>
+            <!-- <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button> -->
+          </div>
+          <div class="modal-body">
+            <div class="row delivery-add">
+              <div class="col-md-5">
+                <div class="cart-total">
+                  <div class="total-count">
+                    <h5 class="d-flex">
+                      Subtotal
+                      <span class="ms-auto"
+                        >${{ cartSubTotal$ | async | number: "1.2-2" }}</span
+                      >
+                    </h5>
+                    <h6 class="d-flex">
+                      Restaurant Handling Charges
+                      <span class="ms-auto"
+                        >${{
+                          cartResturaHandlingCharge$ | async | number: "1.2-2"
+                        }}</span
+                      >
+                    </h6>
+                    <h5 class="d-flex">
+                      Total Tax
+                      <span class="ms-auto"
+                        >${{ cartTotalTax$ | async | number: "1.2-2" }}</span
+                      >
+                    </h5>
+                    <h5 class="d-flex">
+                      Amount payable
+                      <span class="ms-auto"
+                        >${{ cartNetTotal$ | async | number: "1.2-2" }}</span
+                      >
+                    </h5>
+                  </div>
+                  <div class="total-checkout d-flex align-items-center">
+                    <div class="item-cart">Total</div>
+                    <div class="total-price ms-auto">
+                      ${{ cartNetTotal$ | async | number: "1.2-2" }}
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-7">
+                <!-- <ng-container *ngIf="isStepOneCompleted === false"> -->
+                  <ng-container>
+                  <form [formGroup]="addressForm">
+                    <div class="row">
+                      <!-- <div class="col-md-6">
+                        <div class="mb-3">
+                          <label class="form-label">Type</label>
+                          <select formControlName="order_type"  class="form-control" (change)="setOrderType($event)" >
+                            <option value="takeaway" [selected]="'true'" >Take Away</option>
+                            <option value="delivery">Delivery</option>
+                          </select>
+                          <div
+                            *ngIf="isSubmitted && f.order_type.errors"
+                            class="invalid-feedback"
+                            style="display: block"
+                          >
+                            <div *ngIf="f.order_type.errors.required">
+                              Please select order type.
+                            </div>
+                          </div>
+                        </div>
+                      </div>  -->
+                      <div class="col-md-6">
+                        <div class="mb-3">
+                          <label class="form-label">Name</label>
+                          <input
+                            type="text"
+                            formControlName="name"
+                            class="form-control"
+                            placeholder="Your name"
+                          />
+                          <div
+                            *ngIf="isSubmitted && f.name.errors"
+                            class="invalid-feedback"
+                            style="display: block"
+                          >
+                            <div *ngIf="f.name.errors.required">
+                              Please enter name.
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-md-6">
+                        <div class="mb-3">
+                          <label class="form-label">Phone Number</label>
+                          <input
+                            type="text"
+                            formControlName="phone_no"
+                            class="form-control"
+                            placeholder="1234567890"
+                          />
+                          <div
+                            *ngIf="isSubmitted && f.phone_no.errors"
+                            class="invalid-feedback"
+                            style="display: block"
+                          >
+                        
+                            <div *ngIf="f.phone_no.errors.required">
+                              Please enter phone number.
+                            </div>
+                            <div *ngIf="f.phone_no.errors.pattern">
+                              Please enter valid phone number.
+                            </div>
+                            <div *ngIf="f.phone_no.errors.minlength ">
+                              Please enter minimum 10 digits!
+                            </div>
+                            <div *ngIf="f.phone_no.errors.maxlength">
+                              Please enter maximum 10 digits!
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+
+                    </div>
+                    
+                    <div class="row">
+                      
+                    
+                      <div class="col-md-12">
+                        <div class="mb-3">
+                          <label class="form-label">Email address</label>
+                          <input
+                            type="email"
+                            formControlName="email_id"
+                            class="form-control"
+                            placeholder="name@example.com"
+
+                          />
+                          <div
+                            *ngIf="isSubmitted && f.email_id.errors"
+                            class="invalid-feedback"
+                            style="display: block"
+                          >
+                            <div *ngIf="f.email_id.errors.required">
+                              Please enter email.
+                            </div>
+                            <div *ngIf="f.email_id.errors.email">
+                              Email must be a valid email address
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="col-md-12" *ngIf="orderType==='delivery'">
+                        <div class="mb-3">
+                          <label class="form-label">Address</label>
+                          <input
+                            type="text"
+                            formControlName="address"
+                            class="form-control"
+                            placeholder="Your address"
+                            ngx-google-places-autocomplete (onAddressChange)="handleAddressChange($event)"
+                          />
+                          <div
+                            *ngIf="isSubmitted && f.address.errors"
+                            class="invalid-feedback"
+                            style="display: block"
+                          >
+                            <div *ngIf="f.address.errors.required">
+                              Please enter address.
+                            </div>
+                          </div>
+                        </div>
+
+                        
+                      </div>
+                      
+                    </div>
+                    <div class="row">
+                      <div class="col-lg-6">
+                        <div class="mb-3 mt-2">
+                          <button class="btn btn-danger" (click)="addressSubmit()" type="button">Submit</button>
+                        </div>
+                      </div>
+                    </div>
+                  </form>
+                </ng-container>
+                <!-- <ng-container *ngIf="isStepOneCompleted === true">
+                  <div class="row">
+                    <ngx-paypal [config]="payPalConfig"></ngx-paypal>
+                  </div>
+                </ng-container> -->
+                
+
+              
+              </div>
+            </div>
+          </div>
+          </ng-container>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="cartloginSignupModal" tabindex="-1" aria-labelledby="exampleModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog login-modal modal-dialog-centered">
+    <div class="modal-content">
+      <button type="button" id="closecartloginSignupModal" #closecartloginSignupModal class="btn-close"
+        data-bs-dismiss="modal" aria-label="Close"></button>
+      <div class="modal-body login-wrapper d-flex p-0">
+        <div class="login-img">
+          <img src="assets/images/login.jpg" alt="" />
+        </div>
+        <ng-container *ngIf="isShowLoginSectionForm===true">
+          <div class="row m-0 py-4 align-items-center">
+            <app-login></app-login>
+            <div class="b-area">
+              New to Code Red Pizza? <a href="javascript:void(0);" (click)="setloginSignup(1);">Create an account</a>
+            </div>
+          </div>
+        </ng-container>
+        <ng-container *ngIf="isStepOneCompleted===true">
+          <div class="row m-0 py-4 align-items-center">
+            <app-signup></app-signup>
+            <div class="b-area">
+              Already have account? <a href="javascript:void(0);" (click)="setloginSignup(0);">Please Login</a>
+            </div>
+          </div>
+        </ng-container>
+      </div>
+    </div>
+  </div>

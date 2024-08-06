@@ -1,0 +1,80 @@
+<div class="account-sidebar">
+  <div class="d-flex flex-column align-items-center text-center p-3 py-5">
+    <div class="acc-img">
+      <span><a href="javascript:void(0);" (click)="initEditProfile()" style="color:#999;"><i class="bi bi-pencil"></i></a></span>
+      <img class="mb-4" width="150px" [src]="myprofiledata?.profile_pic ? imageBaseUrl+myprofiledata?.profile_pic : 'assets/images/avtar.png'" />
+    </div>
+    <!-- <a href="#" data-bs-toggle="modal" data-bs-target="#profilePicModal" style="color:#999;"><i class="bi bi-person-plus-fill">Edit pic</i></a> -->
+    <h4 class="font-weight-bold">{{myprofiledata?.user_name}}</h4>
+    <h5 class="text-black-50">
+      <i class="bi bi-envelope-fill"></i> {{myprofiledata?.email_id}}
+    </h5>
+    <h5 class="text-black-50" *ngIf="myprofiledata?.phone_no">
+      <i class="bi bi-phone"></i> {{myprofiledata?.phone_no}}
+    </h5>
+    <!-- <h4 class="font-weight-bold">USA</h4> -->
+    <div class="form-check">
+      <input class="form-check-input" type="checkbox" value="" id="flexCheckChecked" 
+      (change)="changeNewsletterStatus($event)" 
+      [checked]= "myprofiledata?.newsletter_status==='active' ? true:false">
+      <label class="form-check-label" for="flexCheckChecked">
+          Signup to the Mailing list
+      </label>
+    </div>
+  </div>
+</div>
+<div class="modal fade" id="profilePicModal" tabindex="-1" aria-labelledby="profilePicModalLabel" aria-hidden="true">
+  <div class="modal-dialog login-modal modal-dialog-centered">
+    <div class="modal-content">
+      <button  type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" (click)="closeProfilePicModal();"></button>
+      <div class="modal-body login-wrapper d-flex align-items-center p-0">
+        <div class="row m-3">
+           <div  [class]="isShowProfileImage ? 'col-md-6': 'col-md-12' " >
+              <!-- <div class="login-box"> -->
+                <ng-container>
+                  <form [formGroup]="profilePicForm" (ngSubmit)="profilePicFormSubmit()">
+                    <h2>Edit Profile Picture</h2>
+                    <div class="mb-3">
+                      <label class="form-label">Image</label>
+                      <input type="file" #takeprofilepicInput formControlName="profile_pic" (change)="fileChangeEvent($event)" />
+                      <div *ngIf="isSubmitted && profilePicFcontrol.profile_pic.errors" class="invalid-feedback" style="display:block">
+                        <div *ngIf="profilePicFcontrol.profile_pic.errors.required">Please choose profile picture.</div>
+                      </div>
+                    </div>
+                    <div class="mb-3">
+                      <label class="form-label">Preview Image</label>
+                    </div>
+                    <div class="mb-3">
+                      <img [src]="croppedImage" *ngIf="isShowProfileImage" style="height:80px;width:80px;"/>
+                    </div>
+                    <div class="mb-3">
+                      <button type="submit" class="btn btn-danger">Update Profile Picture</button>
+                    </div>
+                  </form>
+                </ng-container>
+              <!-- </div> -->
+           </div>
+           <div class="col-md-6" *ngIf="isShowProfileImage">
+            <div class="">
+              <h2>Crop Image</h2>
+              <image-cropper 
+                    [imageChangedEvent]="imageChangedEvent" 
+                    [maintainAspectRatio]="true" 
+                    [aspectRatio]="1 / 1"
+                    [resizeToWidth]="256" 
+                    format="png" 
+                    (imageCropped)="imageCropped($event)" 
+                    (imageLoaded)="imageLoaded()"
+                    (cropperReady)="cropperReady()" 
+                    (loadImageFailed)="loadImageFailed()"></image-cropper>
+            </div>
+           </div>
+        </div>
+        
+        
+        
+        
+      </div>
+    </div>
+  </div>
+</div>

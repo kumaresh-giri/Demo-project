@@ -1,0 +1,73 @@
+<div class="dashboard-wrapper">
+  <div class="row">
+    <div class="col-lg-3">
+      <app-myaccount-left-sidebar></app-myaccount-left-sidebar>
+      
+    </div>
+    <div class="col-lg-9">
+      <div class="acc-gray-bg">
+        <div class="row align-items-stretch">
+            <div class="c-dashboardInfo col-lg-4 col-md-6">
+              <div class="wrap">
+                <span><i class="bi bi-speedometer2"></i></span>
+                <h4 class="heading heading5 hind-font medium-font-weight c-dashboardInfo__title">Active Order</h4>
+                <span class="hind-font caption-12 c-dashboardInfo__count">{{activeOrderCount}}</span>
+              </div>
+            </div>
+           
+            <div class="c-dashboardInfo col-lg-4 col-md-6">
+              <div class="wrap">
+                <span><i class="bi bi-cart4"></i></span>
+                <h4 class="heading heading5 hind-font medium-font-weight c-dashboardInfo__title">Pending Order</h4>
+                <span class="hind-font caption-12 c-dashboardInfo__count">{{processingOrderCount}}</span>
+              </div>
+            </div>
+            <div class="c-dashboardInfo col-lg-4 col-md-6">
+              <div class="wrap">
+                <span><i class="bi bi-check2-circle"></i></span>
+                <h4 class="heading heading5 hind-font medium-font-weight c-dashboardInfo__title">Delivered Order</h4>
+                <span class="hind-font caption-12 c-dashboardInfo__count">{{deliveredOrderCount}}</span>
+              </div>
+            </div>
+          </div>
+
+
+          <div class="table-responaive mt-4">
+            <table class="table table-bordered table-hover">
+              <thead class="thead-dark">
+                <tr>
+                  <th scope="col">ID</th>
+                  <th scope="col">Order Type</th>
+                  <th scope="col">Date</th>
+                  <th scope="col">Price</th>
+                  <th scope="col">Status</th>
+                </tr>
+              </thead>
+              <tbody >
+                <ng-container *ngIf="orderLists.length>0">
+                  <tr *ngFor="let singleOrder of orderLists">
+                    <th scope="row" ><a [routerLink]="'/order-details/' + singleOrder?._id" class="btn">{{singleOrder?.order_id}}</a></th>
+                    <td>{{singleOrder?.order_type|titlecase}}</td>
+                    <td>{{singleOrder?.created_at| date: "d MMMM YYYY"}}</td>
+                    <td>${{singleOrder?.payment_amount | number: "1.2-2"}}</td>
+                    <td>{{singleOrder?.order_status|titlecase}}</td>
+                  </tr>
+                </ng-container> 
+                <ng-container *ngIf="recordCount==0 && isShowLoader==0">
+                  <tr style="text-align: center;">
+                    <th scope="row" colspan="5">
+                      No record available
+                    </th>
+                  </tr>
+                </ng-container> 
+                
+              </tbody>
+
+            </table>
+            <button class="btn load-btn" (click)="pageno = pageno + 1; fetchOrderLists()"  *ngIf="isShowLoadMore && isShowLoader==0">Load More</button>
+
+          </div>
+        </div>
+    </div>
+  </div>
+</div>

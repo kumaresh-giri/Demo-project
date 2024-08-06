@@ -1,0 +1,84 @@
+<div class="dashboard-wrapper">
+  <div class="row">
+    <div class="col-lg-3">
+      <app-myaccount-left-sidebar></app-myaccount-left-sidebar>
+    </div>
+    <div class="col-lg-9">
+      <div class="acc-gray-bg">
+        <h3>My wishlist</h3>
+        <hr />
+        <ng-container *ngIf="wishlistLists; else noDataAvailable">
+          <div class="wish-scroll">
+          <div
+            class="list-pizza"
+            *ngFor="let cartItem of wishlistLists; let i = index"
+          >
+            <div class="select-title">
+              {{ cartItem?.product[0]?.product_name }}
+              <span class="ms-auto" (click)="deleteWishlistItem(cartItem?._id)"
+                ><i class="bi bi-x"></i
+              ></span>
+              <br /><span class="ms-auto"
+                >${{
+                  cartItem?.overallSinglePizzaPrice | number: "1.2-2"
+                }}</span
+              >
+            </div>
+            <div class="cart-scroll">
+              <div class="add-pizza d-flex align-items-center">
+                <img
+                  [src]="imageBaseUrl + cartItem?.product[0]?.product_image"
+                  alt=""
+                />
+                <h4>{{ cartItem?.product[0]?.product_name }}</h4>
+                <span class="ms-auto"
+                  >${{
+                    cartItem?.product[0]?.selling_price | number: "1.2-2"
+                  }}</span
+                >
+              </div>
+              <div
+                *ngIf="cartItem?.product_addons?.length"
+                class="select-title gray-bg"
+                type="button"
+                data-bs-toggle="collapse"
+                [attr.data-bs-target]="'#collapsecartsignature' + i"
+                aria-expanded="false"
+                aria-controls="collapsecart"
+              >
+                Add-on-Item <i class="bi bi-chevron-down"></i>
+              </div>
+              <div
+                class="show-ul collapse"
+                id="{{ 'collapsecartsignature' + i }}"
+              >
+                <ul class="cart-list" *ngIf="cartItem?.product_addons?.length">
+                  <li
+                    class="d-flex align-items-center"
+                    *ngFor="let singlecartItemAddon of cartItem?.product_addons"
+                  >
+                    <h4>{{ singlecartItemAddon?.addon_name }}</h4>
+                    <span class="ms-auto"
+                      >${{
+                        singlecartItemAddon?.addon_price | number: "1.2-2"
+                      }}</span
+                    >
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+        </ng-container>
+        <button
+          class="btn order-list"
+          (click)="pageno = pageno + 1; fetchWishlistLists()"
+          *ngIf="isShowLoadMore && isShowLoader == 0"
+        >
+          Load More
+        </button>
+        <ng-template #noDataAvailable>No Data Available</ng-template>
+      </div>
+    </div>
+  </div>
+</div>

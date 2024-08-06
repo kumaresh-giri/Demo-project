@@ -1,0 +1,23 @@
+<div class="ht-60 d-flex align-items-center justify-content-between custom-pagination">
+  <!-- <div>Showing {{(rows.length > 0) ? paginationOptions.pagingCounter : 0}} to {{ (rows.length > 0) ? paginationOptions.pagingCounter + (rows.length - 1) : 0}} of {{paginationOptions.totalDocs}} records</div> -->
+
+  <ul class="pagination pagination-basic mb-0">
+      <li class="page-item" [class.disabled]="paginationOptions.totalPages <= 1">
+          <button class="page-link" (click)="this.onPageClicked.emit(1)">First</button>
+      </li>
+      <li class="page-item" [class.disabled]="!paginationOptions.hasPrevPage">
+          <button class="page-link" (click)="this.onPageClicked.emit(paginationOptions.prevPage)">Previous</button>
+      </li>
+
+      <li class="page-item active">
+          <button class="page-link">{{paginationOptions.page}}</button>
+      </li>
+
+      <li class="page-item" [class.disabled]="!paginationOptions.hasNextPage">
+          <button class="page-link" (click)="this.onPageClicked.emit(paginationOptions.nextPage)">Next</button>
+      </li>
+      <li class="page-item" [class.disabled]="paginationOptions.totalPages <= 1">
+          <button class="page-link" (click)="this.onPageClicked.emit(paginationOptions.totalPages)">Last</button>
+      </li>
+  </ul>
+</div>

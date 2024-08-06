@@ -1,0 +1,162 @@
+<div class="inner-title">
+    <h1>Become a code enforcer
+    </h1>
+  </div>
+<div class="container">
+    <div class="row justify-content-md-center">
+        <div class="col-md-9 ">
+            <div class="login-box">
+                <form [formGroup]="applyForm" id="applyForm" (ngSubmit)=" applyFormSubmit()" >
+                    <!-- <h2 class="text-center">APPLY NOW</h2> -->
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <div class="mb-3">
+                                <label class="form-label">Name<span class="text-danger">*</span></label>
+                                <input type="text" placeholder="Enter name" class="form-control" formControlName="user_name"/>
+                                <div *ngIf="isSubmitted && ApplyFcontrol.user_name.errors" class="invalid-feedback" style="display:block" >
+                                <div *ngIf="ApplyFcontrol.user_name.errors.required">Please enter name.</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">           
+                            <div class="mb-3">
+                                <label class="form-label">Address<span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" formControlName="street_address"   ngx-google-places-autocomplete
+                                (onAddressChange)="handleApplyAddressChange($event)"/> 
+                                <div *ngIf="isSubmitted && ApplyFcontrol.street_address.errors" class="invalid-feedback" style="display:block" >
+                                <div *ngIf="ApplyFcontrol.street_address.errors.required">Please enter address.</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div> 
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <div class="mb-3">
+                                <label class="form-label">City<span class="text-danger">*</span></label>
+                                <input type="text" placeholder="Enter city" class="form-control" formControlName="city" />
+                                <div *ngIf="isSubmitted && ApplyFcontrol.city.errors" class="invalid-feedback" style="display:block" >
+                                 <div *ngIf="ApplyFcontrol.city.errors.required">Please enter city.</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">           
+                            <div class="mb-3">
+                                <label class="form-label">State<span class="text-danger">*</span></label>
+                                <input type="text" placeholder="Enter state" class="form-control" formControlName="state"  />
+                                <div *ngIf="isSubmitted && ApplyFcontrol.state.errors" class="invalid-feedback" style="display:block" >
+                                <div *ngIf="ApplyFcontrol.state.errors.required">Please enter state.</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div> 
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <div class="mb-3">
+                                <label class="form-label">Zipcode<span class="text-danger">*</span></label>
+                                <input type="text" placeholder="Enter zipcode" class="form-control" formControlName="zipcode"  />
+                                <div *ngIf="isSubmitted && ApplyFcontrol.zipcode.errors" class="invalid-feedback" style="display:block" >
+                                <div *ngIf="ApplyFcontrol.zipcode.errors.required">Please enter zipcode.</div>
+                                <div *ngIf="ApplyFcontrol.zipcode.errors.pattern">Please enter a valid zipcode</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">           
+                            <div class="mb-3">
+                                <label class="form-label">Mobile<span class="text-danger">*</span></label>
+                                <input type="text" placeholder="Enter mobile" class="form-control" formControlName="phone_no"  />
+                                <div *ngIf="isSubmitted && ApplyFcontrol.phone_no.errors" class="invalid-feedback" style="display:block" >
+                                <div *ngIf="ApplyFcontrol.phone_no.errors.required">Please enter mobile.</div>
+                                <div *ngIf="ApplyFcontrol.phone_no.errors.pattern">Please enter a valid mobile</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div> 
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <div class="mb-3">
+                                <label class="form-label">Email<span class="text-danger">*</span></label>
+                                <input type="text" placeholder="Enter email" class="form-control" formControlName="email_add" />
+                                <div *ngIf="isSubmitted && ApplyFcontrol.email_add.errors" class="invalid-feedback" style="display:block" >
+                                <div *ngIf="ApplyFcontrol.email_add.errors.required">Please enter email.</div>
+                                <div *ngIf="ApplyFcontrol.email_add.errors.email">Email must be a valid email address</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">           
+                            <div class="mb-3">
+                                <label class="form-label">Age (in years)<span class="text-danger">*</span></label>
+                                <input type="text" placeholder="Enter age" class="form-control" formControlName="age" />
+                                <div *ngIf="isSubmitted && ApplyFcontrol.age.errors" class="invalid-feedback" style="display:block" >
+                                <div *ngIf="ApplyFcontrol.age.errors.required">Please enter age.</div>
+                                <div *ngIf="ApplyFcontrol.age.errors.pattern">Please enter valid age.</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div> 
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <div class="mb-3">
+                                <label class="form-label">Do you have reliable transportation?<span class="text-danger">*</span></label>
+                                <select class="form-select" formControlName="transportation_option" >
+                                    <option value="">Select option</option>
+                                    <option value="yes">Yes</option>
+                                    <option value="no">No</option>
+                                </select>
+                                <div *ngIf="isSubmitted && ApplyFcontrol.transportation_option.errors" class="invalid-feedback" style="display:block" >
+                                <div *ngIf="ApplyFcontrol.transportation_option.errors.required">Please select an option.</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">           
+                            <div class="mb-3">
+                                <label class="form-label">High School/Graduate ?<span class="text-danger">*</span></label>
+                                <select class="form-select" formControlName="graduate" >
+                                    <option value="">Select option</option>
+                                    <option value="no">High School</option>
+                                    <option value="yes">Graduate</option>
+                                </select>
+                                <div *ngIf="isSubmitted && ApplyFcontrol.graduate.errors" class="invalid-feedback" style="display:block" >
+                                <div *ngIf="ApplyFcontrol.graduate.errors.required">Please select an option.</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>     
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <div class="mb-3">
+                                <label class="form-label">Hours/days available?<span class="text-danger">*</span></label>
+                                <input type="text" placeholder="Enter hours/days available " class="form-control" formControlName="hours_day" />
+                                <div *ngIf="isSubmitted && ApplyFcontrol.hours_day.errors" class="invalid-feedback" style="display:block" >
+                                <div *ngIf="ApplyFcontrol.hours_day.errors.required">Please enter hours/days availability.</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">           
+                            <div class="mb-3">
+                                <label class="form-label">Desired Position?<span class="text-danger">*</span></label>
+                                <input type="text" placeholder="Enter desired position" class="form-control" formControlName="position"  />
+                                <div *ngIf="isSubmitted && ApplyFcontrol.position.errors" class="invalid-feedback" style="display:block" >
+                                <div *ngIf="ApplyFcontrol.position.errors.required">Please enter desired position.</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div> 
+                    <div class="row">
+                        <ngx-recaptcha2
+                        #captchaElem
+                        [siteKey]="this.captchaSiteKey"
+                        formControlName="recaptcha"
+                        >
+                        </ngx-recaptcha2> 
+                        <div *ngIf="isSubmitted && ApplyFcontrol.recaptcha.errors" class="invalid-feedback" style="display:block" >
+                            <div *ngIf="ApplyFcontrol.recaptcha.errors.required">Please enter recaptcha.</div>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <button type="submit" class="btn load-btn">Submit</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,107 @@
+<div class="dashboard-wrapper">
+  <div class="row">
+    <div class="col-lg-3">
+      <app-myaccount-left-sidebar></app-myaccount-left-sidebar>
+      <!-- <div class="account-sidebar">
+        <div class="d-flex flex-column align-items-center text-center p-3 py-5">
+          <div class="acc-img">
+            <span
+              ><a href="#"><i class="bi bi-pencil"></i></a
+            ></span>
+            <img class="mb-4" width="150px" src="assets/images/avtar.png" />
+          </div>
+          <h4 class="font-weight-bold">{{myprofiledata?.user_name}}</h4>
+          <h5 class="text-black-50">
+            <i class="bi bi-envelope-fill"></i> {{myprofiledata?.email_id}}
+          </h5>
+          <h5 class="text-black-50">
+            <i class="bi bi-phone"></i> {{myprofiledata?.phone_no}}
+          </h5>
+          <h4 class="font-weight-bold">USA</h4>
+          <div class="form-check">
+            <input class="form-check-input" type="checkbox" value="" id="flexCheckChecked" checked>
+            <label class="form-check-label" for="flexCheckChecked">
+                Signup to the Mailing list
+            </label>
+          </div>
+        </div>
+      </div> -->
+    </div>
+    <div class="col-lg-9">
+      <div class="acc-gray-bg">
+        <div class="pro-about">
+          <form [formGroup]="editProfileForm" (ngSubmit)="updateProfileSubmit()">
+            <h3>Profile Information</h3>
+            <hr/>
+            <div class="row">
+              <div class="col-lg-6">
+                  <div class="mb-3">
+                    <label class="form-label">Name</label>
+                    <input type="text" formControlName="user_name" class="form-control" placeholder="Your name">
+                    <div *ngIf="isSubmitted && f.user_name.errors" class="invalid-feedback" style="display:block">
+                      <div *ngIf="f.user_name.errors.required">Please enter name.</div>
+                    </div>
+                  </div>
+              </div>
+              <div class="col-lg-6">
+                  <div class="mb-3">
+                      <label class="form-label">Email address</label>
+                      <input type="email" formControlName="email_id" class="form-control" readonly placeholder="name@example.com">
+                    </div>
+              </div>
+              <div class="col-lg-6">
+                  <div class="mb-3">
+                    <label class="form-label">Phone number</label>
+                    <input type="text" formControlName="phone_no" class="form-control" placeholder="1234567890">
+                    <div *ngIf="isSubmitted && f.phone_no.errors" class="invalid-feedback" style="display:block">
+                      <div *ngIf="f.phone_no.errors.required">
+                        Please enter phone number.
+                      </div>
+                      <div *ngIf="f.phone_no.errors.pattern">
+                        Please enter valid phone number.
+                      </div>
+                      <div *ngIf="f.phone_no.errors.minlength ">
+                        Please enter minimum 10 digits!
+                      </div>
+                      <div *ngIf="f.phone_no.errors.maxlength">
+                        Please enter maximum 10 digits!
+                      </div>
+                    </div>
+                  </div>
+              </div>
+              <!-- <div class="col-lg-6">
+                  <div class="mb-3">
+                      <label class="form-label">Location</label>
+                      <input type="text" class="form-control" placeholder="USA">
+                    </div>
+              </div>            -->
+            </div>
+            <hr/>
+            <div class="row ">
+              <!-- <div class="col-lg-6">
+                  <div class="mb-3">
+                      <label class="form-label">Change Password</label>
+                      <input type="password" class="form-control" placeholder="123456789">
+                    </div>
+              </div>
+              <div class="col-lg-6">
+                  <div class="mb-3">
+                      <label class="form-label">Confirm Password</label>
+                      <input type="password" class="form-control" placeholder="123456789">
+                    </div>
+              </div>  -->
+              <div class="col-lg-6">
+                  <div class="mb-3 mt-4">
+                      <button class="btn">Update Profile</button>
+                    </div>
+              </div>           
+            </div>
+
+
+
+          
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

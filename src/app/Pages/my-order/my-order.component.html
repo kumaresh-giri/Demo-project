@@ -1,0 +1,29 @@
+<div class="dashboard-wrapper">
+  <div class="row">
+    <div class="col-lg-3">
+      <app-myaccount-left-sidebar></app-myaccount-left-sidebar>
+    </div>
+    <div class="col-lg-9">
+      <div class="acc-gray-bg">
+        <h3>My Orders</h3>
+        <hr>
+        <ng-container *ngIf="orderLists.length>0">
+          <div class="order-list" *ngFor="let singleOrder of orderLists; index as i">
+            <div class="row">
+                <div class="col-lg-9">
+                  <h4>{{ singleOrder?.order_id }}</h4>
+                  <h5>Amount - <span>${{singleOrder?.payment_amount | number: "1.2-2"}}</span></h5>
+                </div>
+                <div class="col-lg-3">
+                  <h4><span>Order date - {{singleOrder?.created_at| date: "d MMMM YYYY"}}</span></h4>                  
+                  <a [routerLink]="'/order-details/' + singleOrder?._id" class="btn">View Order Details</a>
+                </div>
+            </div>
+          </div>
+        </ng-container>
+        <button class="btn load-btn" (click)="pageno = pageno + 1; fetchOrderLists()"  *ngIf="isShowLoadMore && isShowLoader==0">Load More</button>
+        <ng-container ><div class="row" *ngIf="recordCount==0 && isShowLoader==0"><div class="col-lg-9">No Data Available</div></div></ng-container>
+      </div>
+    </div>
+  </div>
+</div>

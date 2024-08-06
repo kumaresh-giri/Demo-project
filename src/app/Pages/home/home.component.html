@@ -1,0 +1,164 @@
+<div class="banner-wrapper">
+  <div class="container">
+
+    
+    <nav class="navbar navbar-expand-lg">
+      <div class="container-fluid">
+        <a class="navbar-brand" routerLink="/"><img src="assets/images/logo.png" alt="" />
+          <img src="assets/images/logo-text.png" alt="" class="sublogo" />
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+          aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"><i class="bi bi-justify"></i></span>
+        </button>
+        <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+          <ul class="navbar-nav mr-auto">
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="javascript:void(0);" (click)="showHideSubMenu();" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Menu
+              </a>
+              <div class="dropdown-menu" ngClass="{{isShowSubMenu ? 'show':'hide'}}" aria-labelledby="navbarDropdown">
+                <a class="dropdown-item" (click)="setSigntaureCustomPizzaTab('custom');" routerLink="/customizepizza/custom">What's your code</a>
+                <a class="dropdown-item" (click)="setSigntaureCustomPizzaTab('signature');" routerLink="/customizepizza/signature">Signature Pizza</a>
+                <a class="dropdown-item" routerLink="/category/salads">Salads</a>
+                <a class="dropdown-item" routerLink="/category/treats">Treats</a>
+                <a class="dropdown-item" routerLink="/category/drinks">Drinks</a> 
+              </div>
+            </li>            
+            <li class="nav-item">
+              <a class="nav-link" routerLink="/customizepizza/custom" (click)="setSigntaureCustomPizzaTab('custom');">Order
+                Online
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" routerLink="/review">Reviews</a>
+            </li>
+            <li class="nav-item cart-icon">
+              <a class="nav-link" routerLink="/main-cart"><img src="assets/images/cart.png" alt=""/></a>
+            </li>
+          </ul>
+          <ul class="navbar-nav mr-auto pt-0" *ngIf="isLoggedInuser===true">
+            <li class="login-icon user-nav" style="position:relative;">
+              <a href="#" class="nav-link dropdown-toggle" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown"
+                aria-expanded="false"><i class="bi bi-person-fill"></i> </a>
+              <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                <li><a class="dropdown-item" routerLink="/dashboard">
+                    Dashboard</a></li>
+                <li><a class="dropdown-item" routerLink="/my-order">My order</a></li>
+               
+        
+                <li><a class="dropdown-item" routerLink="/profile">My Profile</a>
+                </li>
+                <li><a class="dropdown-item" routerLink="/change-password"> Change
+                    Password</a></li>
+                <li><a href='javascript:void(0);' class="dropdown-item"  (click)="logout()"> Logout</a></li>
+              </ul>
+            </li>
+          </ul>
+        </div>
+        <!-- <div class="login-area ms-auto" *ngIf="isLoggedInuser===true">
+          <ul>
+            <li class="login-icon" >
+              <a href="#" class="dropdown-toggle" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown"
+                aria-expanded="false"><i class="bi bi-person-fill"></i> </a>
+              <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                <li><a class="dropdown-item" routerLink="/dashboard"><i class="bi bi-pie-chart-fill"></i>
+                    Dashboard</a></li>
+                <li><a class="dropdown-item" routerLink="/my-order"><i class="bi bi-basket"></i> My order</a></li>
+               
+        
+                <li><a class="dropdown-item" routerLink="/profile"><i class="bi bi-person-fill"></i> My Profile</a>
+                </li>
+                <li><a class="dropdown-item" routerLink="/change-password"><i class="bi bi-shield"></i> Change
+                    Password</a></li>
+                <li><a href='javascript:void(0);' class="dropdown-item"><i
+                      class="bi bi-arrow-bar-up"></i> Logout</a></li>
+              </ul>
+            </li>
+          </ul>
+        </div> -->
+      </div>
+    </nav>
+    <div class="home-tab">
+      <div class="pizza-left"> <img src="assets/images/pizza-left.png" alt="" /></div>
+      <nav>
+        <div class="nav nav-tabs" id="nav-tab" role="tablist">
+          <button class="nav-link active" id="nav-home-tab" data-bs-toggle="tab" data-bs-target="#nav-home"
+            type="button" role="tab" aria-controls="nav-home" aria-selected="true">
+            <span><img src="assets/images/delivery.png" alt="" /></span> Delivery</button>
+          <button class="nav-link" id="nav-profile-tab" data-bs-toggle="tab" data-bs-target="#nav-profile" type="button"
+            role="tab" aria-controls="nav-profile" aria-selected="false">
+            <span><img src="assets/images/takeway.png" alt="" /></span>Takeaway</button>
+        </div>
+      </nav>
+      <div class="tab-content" id="nav-tabContent">
+        <div class="tab-pane fade show active tab-area" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
+          <h4>CONTACTLESS DELIVERY
+            <span>Contactless Delivery is now available! <a routerLink="/delivery-policy">Learn More</a></span>
+          </h4>
+          <form [formGroup]="homeAddressForm"> 
+            <div class="input-form">
+              <input type="text" formControlName="homeaddress" class="form-control"
+                placeholder="Enter your location for delivery" ngx-google-places-autocomplete
+                (onAddressChange)="handleHomeAddressChange($event)" />
+              <!-- <input type="email" class="form-control" placeholder="Enter your location for delivery"> -->
+              <hr />
+              <button type="button" (click)="findMyCurrentLocation();" class="btn btn-light"><i
+                  class="bi bi-cursor"></i>
+                Find my current location</button>
+            </div>
+          </form>
+        </div>
+        <div class="tab-pane fade tab-area" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab">
+          <div class="text-center">
+            <h2 class="mt-5" style="color:red">COMING SOON</h2>
+          </div>
+            <!-- <h4>OUR STORE ADDRESS
+            <span class="mt-2">{{homeContactAddress}} , take away from our store <a routerLink="/location"><br> Find our store</a></span>
+            <span class="mt-2" style="color:red">COMING SOON</span>
+          </h4> -->
+        </div>
+      </div>
+      <div class="pizza-right"> <img src="assets/images/pizza-right.png" alt="" /></div>
+    </div>
+  </div>
+</div>
+<h2 class="m-title">What’s Your Code?</h2>
+<div class="create-pizza">
+  <img [src]="(homeSettingContent?.homepage_img1) ? imageBaseUrl + homeSettingContent?.homepage_img1: ''" alt="" />
+  <div class="pizza-btn">
+    <a routerLink="/customizepizza/custom" class="btn">create your own pizza</a>
+  </div>
+</div>
+<div class="subscribe-area">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-6">
+        <h3>&nbsp;</h3>
+        <p class="" [innerHTML]="cmsContent?.cms_desc"></p>
+        <div class="subscribe-form">
+          <!-- <form class="row g-3 align-items-center">
+            <div class="col-lg-8 m-0">
+              <input
+                type="text"
+                class="form-control"
+                placeholder="Email Address"
+              />
+            </div>
+            <div class="col-auto m-0">
+              <button type="submit" class="btn btn-primary mb-3">
+                Sign up
+              </button>
+            </div>
+          </form> -->
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="subscribe-img">
+    <img [src]="(homeSettingContent?.homepage_img2) ? imageBaseUrl + homeSettingContent?.homepage_img2: ''" alt="" />
+   
+  </div>
+</div>
+
+

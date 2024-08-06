@@ -1,0 +1,185 @@
+<div class="login-box">
+  <ng-container *ngIf="isShowlogin === true" >
+    <form [formGroup]="loginForm" id="loginForm" (ngSubmit)="loginFormSubmit()">
+      <h2>Login</h2>
+      <div class="mb-3">
+        <label class="form-label">Email<span class="text-danger">*</span></label>
+        <input type="text" class="form-control" formControlName="email_id"  />
+        <div *ngIf="isSubmitted && LoginFcontrol.email_id.errors" class="invalid-feedback" style="display:block" >
+          <div *ngIf="LoginFcontrol.email_id.errors.required">Please enter email.</div>
+          <div *ngIf="LoginFcontrol.email_id.errors.email">Email must be a valid email address</div>
+        </div>
+      </div>
+      <div class="mb-3">
+        <label class="form-label">Password<span class="text-danger">*</span></label>
+        <div class="password-btn">
+        <input [type]="isShowPasswordEye ? 'text' : 'password'" class="form-control" formControlName="password"   />
+        <i
+            (click)="togglePassword()"
+            class="fa"
+            style="cursor: pointer"
+            [ngClass]="{
+              'fa-eye': isShowPasswordEye,
+              'fa-eye-slash': !isShowPasswordEye
+            }"
+          ></i>
+        </div>
+        <div *ngIf="isSubmitted && LoginFcontrol.password.errors" class="invalid-feedback" style="display:block">
+          <div *ngIf="LoginFcontrol.password.errors.required">Please enter password.</div>
+        </div>
+      </div>
+      <div class="form-group remember-fld">
+        <div class="label">
+          <input name="remember_me" formControlName="remember_me" type="checkbox">&nbsp;Remember Me
+        </div>
+      </div>
+       <div class="form-group">
+      <ngx-recaptcha2
+          #captchaElem
+          [siteKey]="this.captchaSiteKey"
+          formControlName="recaptcha"
+        >
+      </ngx-recaptcha2> 
+        <div *ngIf="isSubmitted && LoginFcontrol.recaptcha.errors" class="invalid-feedback" style="display:block" >
+            <div *ngIf="LoginFcontrol.recaptcha.errors.required">Please enter recaptcha.</div>
+            </div>
+    </div> 
+	  <div class="mb-3">
+        <button type="submit" class="btn btn-danger">Login</button>
+        <a href="javascript:void(0);" class="forgat-btn" (click)="setForgotPasswordScreen();">Forgot Password</a>
+      </div>
+    </form>
+    <hr>
+    <!-- <a href="javascript:void(0);" class="forgat-btn" (click)="setSignupScreen();">Signup</a> -->
+
+    <!-- <a href="#" data-bs-toggle="modal" data-bs-target="#signupModal" style="color: #999;">Signup</a> -->
+    
+    <app-social-login></app-social-login>
+    
+
+  </ng-container>
+  <ng-container *ngIf="isShowVerifyEmail">
+    <form [formGroup]="verifyEmailForm" (ngSubmit)="verifyEmailFormSubmit()">
+      <h2>Verify Email</h2>
+      <div class="mb-3">
+        <label class="form-label">OTP<span class="text-danger">*</span></label>
+        <input type="text" class="form-control" formControlName="otp"  />
+        <div *ngIf="isVerifyEmailSubmitted && fve.otp.errors" class="invalid-feedback" style="display:block">
+          <div *ngIf="fve.otp.errors.required">Please enter otp.</div>
+        </div>
+      </div>
+      <div class="mb-3">
+        <button type="submit"  class="btn btn-danger">
+          Verify
+        </button>
+        <button type="button" (click)="resendOtp();"  class="btn btn-danger">
+          Resend OTP
+        </button>
+      </div>
+    </form>
+  </ng-container>
+  <ng-container *ngIf="isShowforgotPassword">
+    <form [formGroup]="forgotPasswordForm" (ngSubmit)="forgotPasswordFormSubmit()">
+      <h2>Forgot Password</h2>
+      <div class="mb-3">
+        <label class="form-label">Email<span class="text-danger">*</span></label>
+        <input type="text" class="form-control" formControlName="email_id" />
+        <div *ngIf="isForgotPasswordSubmitted && forgotFcontrol.email_id.errors" class="invalid-feedback" style="display:block" >
+          <div *ngIf="forgotFcontrol.email_id.errors.required">Please enter email.</div>
+          <div *ngIf="forgotFcontrol.email_id.errors.email">Email must be a valid email address</div>
+        </div>
+      </div>
+      <div class="mb-3">
+      <ngx-recaptcha2
+          #captchaElem
+          [siteKey]="this.captchaSiteKey"
+          formControlName="frecaptcha"
+        >
+      </ngx-recaptcha2> 
+        <div *ngIf="isForgotPasswordSubmitted && forgotFcontrol.frecaptcha.errors" class="invalid-feedback" style="display:block" >
+            <div *ngIf="forgotFcontrol.frecaptcha.errors.required">Please enter recaptcha.</div>
+            </div>
+          </div>      
+      <div class="mb-3">
+        <button type="submit"  class="btn btn-danger">
+          Submit
+        </button>
+        <a href="javascript:void(0);" class="forgat-btn" (click)="setLoginScreen();">Login</a>
+      </div>
+    </form>
+  </ng-container>
+  <ng-container *ngIf="isShowResetPassword">
+    <form [formGroup]="resetPasswordForm" (ngSubmit)="resetPasswordFormSubmit()">
+      <h2>Reset Password</h2>
+      <div class="mb-3">
+        <label class="form-label">OTP<span class="text-danger">*</span></label>
+        <input type="text" class="form-control" formControlName="otp"  />
+        <button
+                  class="btn btn-sm rounded reset-btn"
+                  (click)="resendOtp()"
+                  type="button"
+                >
+                  Resend OTP
+                </button>
+        <div *ngIf="isResetPasswordSubmitted && resetFcontrol.otp.errors" class="invalid-feedback" style="display:block">
+          <div *ngIf="resetFcontrol.otp.errors.required">Please enter otp.</div>
+        </div>
+      </div>
+      <div class="mb-3">
+        <label class="form-label">Password<span class="text-danger">*</span></label>
+          <div class="password-btn">
+            <input [type]="isShowResetPasswordEye ? 'text' : 'password'"  class="form-control" formControlName="password"   />
+            <i
+            (click)="toggleResetPassword()"
+            class="fa"
+            style="cursor: pointer"
+            [ngClass]="{
+              'fa-eye': isShowResetPasswordEye,
+              'fa-eye-slash': !isShowResetPasswordEye
+            }"
+          ></i>
+      </div>
+        <div *ngIf="isResetPasswordSubmitted && resetFcontrol.password.errors" class="invalid-feedback" style="display:block">
+          <div *ngIf="resetFcontrol.password.errors.required">Please enter password.</div>
+          <div *ngIf="resetFcontrol.password.errors.minlength">Must be 8 charcters in length.</div>
+        </div>
+      </div>
+      <div class="mb-3">
+        <label class="form-label">Confirm Password<span class="text-danger">*</span></label>
+        <div class="password-btn">
+        <input [type]="isShowResetConfrimPasswordEye ? 'text' : 'password'"  class="form-control" formControlName="confirm_password"   />
+        <i
+        (click)="toggleResetConfirmPassword()"
+        class="fa"
+        style="cursor: pointer"
+        [ngClass]="{
+          'fa-eye': isShowResetConfrimPasswordEye,
+          'fa-eye-slash': !isShowResetConfrimPasswordEye
+        }"
+      ></i>
+    </div>
+        <div *ngIf="isResetPasswordSubmitted && resetFcontrol.confirm_password.errors" class="invalid-feedback" style="display:block" >
+          <div *ngIf="resetFcontrol.confirm_password.errors.required">Please enter confirm password.</div>
+          <div *ngIf="resetFcontrol.confirm_password.errors.mustMatch">Password & confirm password must be same</div>
+        </div>
+      </div>
+      <div class="mb-3">
+        <ngx-recaptcha2
+            #captchaElem
+            [siteKey]="this.captchaSiteKey"
+            formControlName="rrecaptcha"
+          >
+        </ngx-recaptcha2> 
+          <div *ngIf="isResetPasswordSubmitted && resetFcontrol.rrecaptcha.errors" class="invalid-feedback" style="display:block" >
+              <div *ngIf="resetFcontrol.rrecaptcha.errors.required">Please enter recaptcha.</div>
+              </div>
+      </div>   
+      <div class="mb-3">
+        <button type="submit"  class="btn btn-danger">
+          Reset Password
+        </button>
+        <a href="javascript:void(0);" class="forgat-btn" (click)="setLoginScreen();">Login</a>
+      </div>
+    </form>
+  </ng-container>
+</div>

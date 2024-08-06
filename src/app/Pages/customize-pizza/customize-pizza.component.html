@@ -1,0 +1,296 @@
+<div class="customize-area">
+  <div class="row">
+    <div class="col-md-8 col-lg-9">
+      <div class="left-tab">
+        <ul class="nav nav-tabs" id="myTab" role="tablist">
+          <li class="nav-item" role="presentation">
+            <button [ngClass]="(whetherSignCustomizedPizaaTab$ | async) === 'custom' ? 'nav-link active' : 'nav-link' "
+              id="home-tab" routerLink="/customizepizza/custom" data-bs-toggle="tab" data-bs-target="#home" type="button" role="tab" aria-controls="home"
+              aria-selected="true" (click)="setSigntaureCustomPizzaTab('custom');">
+              What's your Code?
+            </button>
+          </li>
+          <li class="nav-item" role="presentation">
+            <button
+              [ngClass]="(whetherSignCustomizedPizaaTab$ | async) === 'signature' ? 'nav-link active' : 'nav-link' "
+              id="profile-tab" routerLink="/customizepizza/signature" data-bs-toggle="tab" data-bs-target="#profile" type="button" role="tab"
+              aria-controls="profile" aria-selected="false" (click)="setSigntaureCustomPizzaTab('signature');">
+              SIGNATURES PIZZA'S
+            </button>
+          </li>
+        </ul>
+        <div class="tab-content" id="myTabContent">
+          <div
+            [ngClass]="(whetherSignCustomizedPizaaTab$ | async) === 'custom' ? 'tab-pane fade show active' : 'tab-pane fade' "
+            id="home" role="tabpanel" aria-labelledby="home-tab">
+            <!-- form start -->
+            <form [formGroup]="customizedPizzaForm">
+              <div class="accordion accordion-flush" id="accordionFlushExample" *ngIf="customizedPizzaCount>0">
+                <div class="accordion-item" *ngFor="let customizedPizza of customizedPizzas;let i = index">
+                  <h2 class="accordion-header" id="'flush-headingOne'+i">
+                    <button [ngClass]="i > 0 ? 'accordion-button collapsed' : 'accordion-button'" type="button"
+                      data-bs-toggle="collapse" [attr.data-bs-target]="'#flush-collapseOne'+i"
+                      [attr.data-aria-expanded]="true" aria-controls="flush-collapseOne">
+                      {{customizedPizza?.category_name}}
+                    </button>
+                  </h2>
+                  <div id="{{'flush-collapseOne' + i}}"
+                    [ngClass]="i > 0 ? 'accordion-collapse collapse' : 'accordion-collapse collapse collapse show'"
+                    aria-labelledby="flush-headingOne" data-bs-parent="#accordionFlushExample">
+                    <div class="accordion-body" *ngIf="customizedPizza?.products?.length">
+                      <div class="c-pizza d-flex align-items-center"
+                        *ngFor="let itemProduct of customizedPizza.products; let i = index;">
+                        <div class="form-check">
+                          <ng-container *ngIf="customizedPizza?.cat_product_type==='radio'; else checkbox">
+                            <input class="form-check-input" name="chk{{customizedPizza?.category_name}}" [type]=" 'radio'" value="ingredientId"
+                              (change)="selectCustomisedPizzaAddon($event,itemProduct,customizedPizza?.category_name)"
+                              [checked]="radioforCustomizedPizzaSelectedId.includes(itemProduct?._id) ? true:false" />
+                            <label class="form-check-label"
+                              (click)="selectCustomisedPizzaAddonLabel(itemProduct?._id,itemProduct,customizedPizza?.category_name);">
+                              {{itemProduct?.product_name}}
+                            </label>
+                            <label class="text-right" *ngIf="customizedPizza?.show_price==='yes'">
+                              ${{itemProduct?.selling_price}}
+                            </label>
+                          </ng-container>
+                          <ng-template #checkbox>
+                            <input class="form-check-input" name="chk" [type]=" 'checkbox'" value=""
+                              [checked]="currentCustomizedPizzaAddons.includes(itemProduct?._id) === true"
+                              (change)="addCustomisedPizzaAddon($event,itemProduct)" />
+                            <label class="form-check-label"
+                              (click)="addCustomisedPizzaAddonLabel(currentCustomizedPizzaAddons.includes(itemProduct?._id),itemProduct);">
+                              {{itemProduct?.product_name}}
+                            </label>
+                            <label class="text-right" *ngIf="customizedPizza?.show_price==='yes'">
+                              ${{itemProduct?.selling_price}}
+                            </label>
+                          </ng-template>
+
+                        </div>
+                        <!-- <div class="price">$199.00</div> -->
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="tab-search">
+                <label>Your Name</label>
+                <div class="input-group mb-3">
+                  <input type="text" class="form-control" placeholder="Your Name..."
+                    formControlName="product_name" />
+                  <div class="input-group-append">
+                    <button class="btn btn-outline-secondary" type="button" (click)="addToCartCustomPizza($event)">
+                      Add
+                    </button>
+                  </div>
+                  <div *ngIf="isSubmitted && customFcontrol.product_name.errors" class="invalid-feedback"
+                    style="display:block">
+                    <div *ngIf="customFcontrol.product_name.errors.required">Please enter your name.</div>
+                  </div>
+                </div>
+              </div>
+              <!-- end form -->
+            </form>
+          </div>
+          <div
+            [ngClass]="(whetherSignCustomizedPizaaTab$ | async) === 'signature' ? 'tab-pane fade show active' : 'tab-pane fade' "
+            id="profile" role="tabpanel" aria-labelledby="profile-tab">
+            <div class="pizza-wrapper">
+              <div class="row" *ngIf="signaturePizzas?.length>0;">
+                <div class="col-sm-6 col-lg-6" *ngFor="let singleSignaturePizza of signaturePizzas; index as i">
+                  <div class="pizza-list">
+                    <img [src]="(singleSignaturePizza?.product_image) ? imageBaseURL + singleSignaturePizza?.product_image: 'assets/images/no_pizza_image_available.jpg'" alt="" />
+                    <div class="pizza-des">
+                      <p>
+                        {{singleSignaturePizza?.product_name}} : <span> 
+                          
+                          {{ (singleSignaturePizza?.product_desc.length==0) ? 'N/A': (singleSignaturePizza?.product_desc.length > 42
+                          ? (singleSignaturePizza?.product_desc | slice: 0:42) +
+                          ".."
+                          : singleSignaturePizza?.product_desc) }}
+                          
+                          
+                         </span>
+                      </p>
+                      <div class="pizza-price d-flex align-items-center">
+                        <div class="price">${{ singleSignaturePizza?.selling_price | number: "1.2-2" }} <span
+                            *ngIf="singleSignaturePizza?.selling_price!==singleSignaturePizza?.actual_price">${{
+                            singleSignaturePizza?.actual_price | number: "1.2-2" }}</span></div>
+                        <div class="pizza-btn ms-auto">
+                          <!-- <button class="btn btn-lg btn-outline-primary" (click)="openFormModal(singleSignaturePizza)">Open My Modal</button> -->
+                          <!-- <a href="javascript:void(0);" class="btn"
+                            (click)="openWishlistFormModal(singleSignaturePizza)">Wishlist</a> -->
+                          <a href="javascript:void(0);" class="btn"
+                            (click)="openFormModal(singleSignaturePizza)">Select</a>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <button class="btn load-btn" (click)="pageno = pageno + 1; fetchAllSignaturePizzas()"
+                *ngIf="isShowLoadMore && isShowLoader==0">Load More</button>
+                <div class="row " *ngIf="signaturePizzaCount== 0 && isShowLoader == 0">
+                  <div class="col-md-12 no-data">
+                    No Data Available
+                  </div>
+                </div>  
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4 col-lg-3">
+      <app-cart></app-cart>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="addItem" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog pizza-modal modal-dialog-centered">
+    <div class="modal-content">
+      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      <div class="modal-body p-0">
+        <div class="pizza-wrapper">
+          <h4>Add To Cart</h4>
+          <div class="add-pizza p-0 d-flex align-items-center">
+            <div class="m-img">
+              <img [src]="(modalData?.product_image) ? imageBaseURL + modalData?.product_image: 'assets/images/no_pizza_image_available.jpg'" alt="" />
+            </div>
+            <div class="pizza-des">
+              <h5>{{modalData?.product_name}}</h5>
+              <p>
+                {{ (modalData?.product_desc.length==0) ? 'N/A': (modalData?.product_desc.length > 42
+                ? (modalData?.product_desc | slice: 0:42) +
+                ".."
+                : modalData?.product_desc) }}
+                
+               </p>
+              <div class="price">${{ modalData?.selling_price | number: "1.2-2" }} <del
+                  *ngIf="modalData?.selling_price!==modalData?.actual_price">${{ modalData?.actual_price | number:
+                  "1.2-2" }}</del></div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-add" *ngIf="modalData?.product_addons?.length;">
+          <h4>Addon Item</h4>
+          <div class="c-pizza d-flex align-items-center"
+            *ngFor="let singleModalProductAddon of modalData?.product_addons; index as i">
+            <div class="form-check p-0 d-flex align-items-center">
+              <input class="form-check-input" type="checkbox" value=""
+                [checked]="currentSignaturePizzaAddons.includes(singleModalProductAddon?._id) === true"
+                (change)="addSignaturePizzaAddon($event,singleModalProductAddon)" />
+              <img [src]="(modalData?.product_image) ? imageBaseURL + modalData?.product_image: 'assets/images/no_pizza_image_available.jpg'" alt="" />
+              <label class="form-check-label"
+                (click)="addSignaturePizzaAddonOnLabel(currentSignaturePizzaAddons.includes(singleModalProductAddon?._id),singleModalProductAddon)">
+                {{singleModalProductAddon.addon_name}}
+              </label>
+            </div>
+            <div class="price">${{ singleModalProductAddon?.addon_price | number: "1.2-2" }}</div>
+          </div>
+          <div class="c-pizza d-flex align-items-center">
+            <label>Special Instructions</label>
+          </div>
+          <form [formGroup]="signaturePizzaForm">
+            <div class="c-pizza d-flex align-items-center">
+              <textarea class="form-control"  formControlName="specialInstructions"  ></textarea>
+            </div>
+        </form>
+        </div>
+        <div class="model-footer d-flex align-items-center">
+          <h5>Sub Total<span>${{ currentSignaturePizzaFinalPrice | number: "1.2-2" }}</span></h5>
+          <div class="r-cart ms-auto">
+            <button class="c-btn" (click)="addCartSignaturePizza(modalData?._id)">Add to cart</button>
+            <!-- <button class="c-btn" (click)="saveSomeThing()">Clodse </button> -->
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="modal fade" id="addWishlistItem" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog pizza-modal modal-dialog-centered">
+    <div class="modal-content">
+      
+      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      <div class="modal-body p-0">
+        <div class="pizza-wrapper">
+          <h4>Wishlist</h4>
+          <div class="add-pizza p-0 d-flex align-items-center">
+            <div class="m-img">
+              <img [src]="(wishlistModalData?.product_image) ? imageBaseURL + wishlistModalData?.product_image: 'assets/images/no_pizza_image_available.jpg'" alt="" />
+            </div>
+            <div class="pizza-des">
+              <h5>{{wishlistModalData?.product_name}}</h5>
+              <p>
+              
+                {{ (wishlistModalData?.product_desc.length==0) ? 'N/A': (wishlistModalData?.product_desc.length > 42
+                ? (wishlistModalData?.product_desc | slice: 0:42) +
+                ".."
+                : wishlistModalData?.product_desc) }}
+              
+              </p>
+              <div class="price">${{ wishlistModalData?.selling_price | number: "1.2-2" }} <del
+                  *ngIf="wishlistModalData?.selling_price!==wishlistModalData?.actual_price">${{
+                  wishlistModalData?.actual_price | number: "1.2-2" }}</del></div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-add" *ngIf="wishlistModalData?.product_addons?.length;">
+          <h4>Addon Item</h4>
+          <div class="c-pizza d-flex align-items-center"
+            *ngFor="let singleModalProductAddon of wishlistModalData?.product_addons; index as i">
+            <div class="form-check p-0 d-flex align-items-center">
+              <input class="form-check-input" type="checkbox" value=""
+                (change)="addWishlistSignaturePizzaAddon($event,singleModalProductAddon)"
+                [checked]="wishlistSignaturePizzaAddons.includes(singleModalProductAddon?._id) === true" />
+              <img [src]="(wishlistModalData?.product_image) ? imageBaseURL + wishlistModalData?.product_image: 'assets/images/no_pizza_image_available.jpg'" alt="" />
+              <label class="form-check-label"
+                (click)="addWishlistSignaturePizzaAddonLabel(wishlistSignaturePizzaAddons.includes(singleModalProductAddon?._id),singleModalProductAddon)">
+                {{singleModalProductAddon.addon_name}}
+              </label>
+            </div>
+            <div class="price">${{ singleModalProductAddon?.addon_price | number: "1.2-2" }}</div>
+          </div>
+        </div>
+        <div class="model-footer d-flex align-items-center">
+          <h5>Sub Total<span>${{ wishlistSignaturePizzaFinalPrice | number: "1.2-2" }}</span></h5>
+          <div class="r-cart ms-auto">
+            <button class="c-btn" (click)="addWishlistSignaturePizza(wishlistModalData?._id)">Add to wishlist</button>
+            <!-- <button class="c-btn" (click)="saveSomeThing()">Clodse </button> -->
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="modal fade" id="loginSignupModalCustomize" tabindex="-1" aria-labelledby="exampleModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog login-modal modal-dialog-centered">
+    <div class="modal-content">
+      <button type="button" id="closeAddExpenseModal" #closeAddExpenseModal class="btn-close" data-bs-dismiss="modal"
+        aria-label="Close"></button>
+      <div class="modal-body login-wrapper d-flex align-items-center p-0">
+        <div class="login-img">
+          <img src="assets/images/login.jpg" alt="" />
+        </div>
+        <ng-container *ngIf="isShowLoginSectionForm==true">
+          <div class="row">
+            <app-login></app-login>
+            <div class="b-area">
+              New to Code Red Pizza? <a href="javascript:void(0);" (click)="setloginSignup(1);">Create an account</a>
+            </div>
+          </div>
+        </ng-container>
+        <ng-container *ngIf="isShowSignupSectionForm==true">
+          <div class="row">
+            <app-signup></app-signup>
+            <div class="b-area">
+              Already have account? <a href="javascript:void(0);" (click)="setloginSignup(0);">Please Login</a>
+            </div>
+          </div>
+        </ng-container>
+      </div>
+    </div>
+  </div>
+</div>

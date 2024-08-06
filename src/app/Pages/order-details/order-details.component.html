@@ -1,0 +1,301 @@
+<div class="container-fluid my-2  justify-content-center">
+  <div class="row">
+    <div class="col-md-9">
+      <h5 class="card-title">Order Details</h5>
+    </div>
+  </div>
+  <div class="card card-1" *ngIf="isOrderDetailsFound ===true">
+    
+    <div class="card-header bg-white">
+     
+      <div class="row">
+        <div class="col-md-9 py-3">
+          <h5 class="card-title">Order No. : {{ orderDetails?.order_id }}</h5>
+        </div>
+        <div class="col-md-3 py-3">
+          <a href="#" *ngIf="orderDetails?.order_status==='delivered'" class="btn" data-bs-toggle="modal" data-bs-target="#ratingModal" style="color: #999">Rate &
+          Review</a>
+        </div>
+      </div>
+      <hr>
+      <div class="row ord-detail">
+        <div class="col-md-6 py-3">
+          <div class="d-flex flex-column align-items start"> 
+            <h4>Order Details</h4>
+            <p class="text-justify capitalize"><b>Order Status :</b> {{orderDetails?.order_status}}</p>
+            <p class="text-justify capitalize"><b>Type :</b> {{orderDetails?.order_type}}</p>
+            <p class="text-justify "><b>Amount :</b> ${{orderDetails?.payment_amount | number: "1.2-2"}}</p>
+          </div>
+        </div>
+        <div class="col-md-6 py-3">
+          <div class="d-flex flex-column align-items start"> 
+            <h4>Billing Details</h4>
+            <p class="text-justify "><b>Name :</b> {{orderDetails?.del_name}}</p>
+            <p class="text-justify "><b>Email :</b> {{orderDetails?.del_email}}</p>
+            <p class="text-justify "><b>Mobile :</b> {{orderDetails?.del_phone}}</p>
+            <p class="text-justify " *ngIf="orderDetails?.order_address?.address"><b>Address :</b>
+              {{orderDetails?.order_address?.address | titlecase}}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <div class="row justify-content-between mb-3">
+        <div class="col-auto">
+          <h6 class="color-1 mb-0 change-color">Receipt</h6>
+        </div>
+        <!-- <div class="col-auto "> <small>Receipt Voucher : 1KAU9-84UIL</small> </div> -->
+      </div>
+      <div *ngIf="orderCartitems.length > 0">
+        <ng-container *ngFor="let cartItem of orderCartitems; let i = index">
+          <container-element [ngSwitch]="cartItem.product_type">
+            <div class="list-pizza  cart-sidebar mb-2" *ngSwitchCase="'signature'">
+               
+              <div class="select-title d-flex justify-content-between">
+                <div class="">
+                  {{ cartItem?.product[0]?.product_name }}
+                <span class="ms-auto">${{cartItem?.finalOverallSinglePizzaPrice | number: "1.2-2" }}</span>
+                </div>
+                <div class="d-flex justify-content-between" style="width:30%;">
+                  <p>Quantity : <span class="">{{cartItem?.qty }}</span></p>
+                <span class="ms-auto" *ngIf="cartItem?.special_instruction"  tooltip="<p>{{ cartItem?.special_instruction }}</p>"
+                  ><i class="bi bi-eye"></i>
+              </span>
+                </div>
+              </div>
+
+              <div class="cart-scroll">
+                <div class="add-pizza d-flex align-items-center">
+                  <img [src]="(cartItem?.product[0]?.product_image) ? imageBaseUrl + cartItem?.product[0]?.product_image: 'assets/images/no_pizza_image_available.jpg'" alt="" />
+                  <!-- <img [src]="imageBaseUrl+cartItem?.product[0]?.product_image" alt="" /> -->
+                  <h4>{{ cartItem?.product[0]?.product_name }}</h4>
+                  <span class="ms-auto">${{
+                    cartItem?.product[0]?.selling_price | number: "1.2-2"
+                    }}</span>
+                </div>
+                <div *ngIf="cartItem?.product_addons?.length" class="select-title gray-bg" type="button"
+                  data-bs-toggle="collapse" [attr.data-bs-target]="'#collapsecartsignature' + i" aria-expanded="false"
+                  aria-controls="collapsecart">
+                  Addon Item <i class="bi bi-chevron-down"></i>
+                </div>
+                <div class="show-ul collapse" id="{{ 'collapsecartsignature' + i }}">
+                  <ul class="cart-list" *ngIf="cartItem?.product_addons?.length">
+                    <li class="d-flex align-items-center" *ngFor="let singlecartItemAddon of cartItem?.product_addons">
+                      <h4>{{ singlecartItemAddon?.addon_name }}</h4>
+                      <span class="ms-auto">${{
+                        singlecartItemAddon?.addon_price | number: "1.2-2"
+                        }}</span>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+            
+
+            
+            <div class="list-pizza cart-sidebar mb-2" *ngSwitchCase="'custom'">
+              <div class="select-title d-flex justify-content-between" data-bs-toggle="collapse"
+                [attr.data-bs-target]="'#collapsecartcustom' + i" aria-expanded="false" aria-controls="collapseExample">
+                
+                <div class="">
+                  {{ cartItem?.product_name }}
+                <span class="">${{cartItem?.finalOverallSinglePizzaPrice | number: "1.2-2" }}</span>
+                
+                
+                </div>
+                <div class="d-flex justify-content-between" style="width:30%;">
+                  <p>Quantity : <span class="">{{cartItem?.qty }}</span></p>
+                <span class="ms-auto" 
+                  ><i class="bi bi-chevron-down"></i>
+              </span>
+                </div>
+                <!-- <span class="ms-auto">
+                <i class="bi bi-chevron-down"></i>
+                </span> -->
+                <!-- <span class="">${{cartItem?.finalOverallSinglePizzaPrice | number: "1.2-2" }}</span> -->
+                <!-- <span>$130</span> -->
+                <!-- <br />
+                <span class="ms-auto">${{ cartItem?.finalOverallSinglePizzaPrice | number: "1.2-2" }}</span> -->
+                <!-- <div class="">
+                  {{ cartItem?.product[0]?.product_name }}
+                <span class="ms-auto">${{cartItem?.finalOverallSinglePizzaPrice | number: "1.2-2" }}</span>
+                </div> -->
+                <!-- <div class="d-flex justify-content-between" style="width:30%;">
+                  <p>Quantity : <span class="">{{cartItem?.qty }}</span></p>
+                <span class="ms-auto" *ngIf="cartItem?.special_instruction"  tooltip="<p>{{ cartItem?.special_instruction }}</p>"
+                  ><i class="bi bi-eye"></i>
+              </span>
+                </div> -->
+                <!-- <i class="bi bi-chevron-down"></i> -->
+              </div>
+              <div class="cart-scroll" class="collapse" id="{{ 'collapsecartcustom' + i }}">
+                <ul class="cart-list" *ngIf="cartItem?.product_ingredients?.length">
+                  <li class="d-flex align-items-center" *ngFor="
+                              let singlecartItemIngredient of cartItem?.product_ingredients;
+                              index as i
+                            ">
+                    <h4>{{ singlecartItemIngredient?.product_name }}</h4>
+                    <span class="ms-auto" *ngIf="singlecartItemIngredient.selling_price!=0">${{
+                      singlecartItemIngredient?.selling_price | number: "1.2-2"
+                      }}</span>
+                    <!-- <a class="ms-auto" href="#"><i class="bi bi-x"></i></a> -->
+                  </li>
+
+                </ul>
+              </div>
+            </div>
+            <div class="list-pizza  cart-sidebar mb-2" *ngSwitchDefault>
+              <div class="select-title d-flex justify-content-between">
+                <div class="">
+                  {{ cartItem?.product[0]?.product_name }}
+                <span class="ms-auto">${{cartItem?.finalOverallSinglePizzaPrice | number: "1.2-2" }}</span>
+                </div>
+                <div class="d-flex justify-content-between" style="width:30%;">
+                  <p>Quantity : <span class="">{{cartItem?.qty }}</span></p>
+                <span class="ms-auto" *ngIf="cartItem?.special_instruction"  tooltip="<p>{{ cartItem?.special_instruction }}</p>"
+                  ><i class="bi bi-eye"></i>
+              </span>
+                </div>
+              </div>
+              <!-- <div class="select-title">
+                {{ cartItem?.product[0]?.product_name }}
+                <span class="ms-auto" *ngIf="cartItem?.finalOverallSinglePizzaPrice">${{ cartItem?.finalOverallSinglePizzaPrice | number: "1.2-2" }}</span>
+                <span class="ms-auto" *ngIf="cartItem?.special_instruction"  tooltip="<p>{{ cartItem?.special_instruction }}</p>"
+                  ><i class="bi bi-eye"></i
+                >
+              </span>
+              </div> -->
+              <div class="cart-scroll">
+                <div class="add-pizza d-flex align-items-center">
+                  <img [src]="(cartItem?.product[0]?.product_image) ? imageBaseUrl + cartItem?.product[0]?.product_image: 'assets/images/no_pizza_image_available.jpg'" alt="" />
+                  <!-- <img [src]="imageBaseUrl+cartItem?.product[0]?.product_image" alt="" /> -->
+                  <h4>{{ cartItem?.product[0]?.product_name }}</h4>
+                  <span class="ms-auto">${{
+                    cartItem?.product[0]?.selling_price | number: "1.2-2"
+                    }}</span>
+                </div>
+                <div *ngIf="cartItem?.product_addons?.length" class="select-title gray-bg" type="button"
+                  data-bs-toggle="collapse" [attr.data-bs-target]="'#collapsecartsignature' + i" aria-expanded="false"
+                  aria-controls="collapsecart">
+                  Addon Item <i class="bi bi-chevron-down"></i>
+                </div>
+                <div class="show-ul collapse" id="{{ 'collapsecartsignature' + i }}">
+                  <ul class="cart-list" *ngIf="cartItem?.product_addons?.length">
+                    <li class="d-flex align-items-center" *ngFor="let singlecartItemAddon of cartItem?.product_addons">
+                      <h4>{{ singlecartItemAddon?.addon_name }}</h4>
+                      <span class="ms-auto">${{
+                        singlecartItemAddon?.addon_price | number: "1.2-2"
+                        }}</span>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+
+          </container-element>
+        </ng-container>
+      </div>
+      <div class="jumbotron-fluid">
+        <div class="row justify-content-between ">
+          <div class="col-auto my-auto ">
+            <h6 class="color-1 mb-0 change-color">Sub Total</h6>
+          </div>
+          <div class="col-auto my-auto ml-auto">
+            <span class="ms-auto">${{((orderSubTotal) ? orderSubTotal : 0) | number: "1.2-2"}}</span>
+          </div>
+        </div>
+        <div class="row justify-content-between ">
+          <div class="col-auto my-auto ">
+            <h6 class="color-1 mb-0 change-color">Restaurant Handling Charge</h6>
+          </div>
+          <div class="col-auto my-auto ml-auto">
+            <span class="ms-auto">${{(( orderDetails?.resturant_handling_charge ) ? orderDetails?.resturant_handling_charge:0) | number: "1.2-2"}}</span>
+          </div>
+        </div>
+        <div class="row justify-content-between ">
+          <div class="col-auto my-auto ">
+            <h6 class="color-1 mb-0 change-color">Total Tax</h6>
+          </div>
+          <div class="col-auto my-auto ml-auto">
+            <span class="ms-auto">${{((orderDetails?.total_tax) ? orderDetails?.total_tax:0) | number: "1.2-2"}}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card-footer">
+      <div class="jumbotron-fluid">
+        <div class="row justify-content-between ">
+          <div class="col-auto my-auto ">
+            <h2 class="mb-0 font-weight-bold">TOTAL PAID</h2>
+          </div>
+          <div class="col-auto my-auto ml-auto">
+            <h1 class="display-3 ">${{((orderDetails?.grand_total) ? orderDetails?.grand_total:0) | number: "1.2-2"}}</h1>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <ng-container *ngIf="isOrderDetailsFound ===false">
+    <!-- <div class="card-header bg-white mb-10">
+      <div class="row">
+        <div class="col-md-9">
+          <h5 class="card-title">Order Details</h5>
+        </div>
+      </div>
+    </div> -->
+    <div class="card-body mb-10">
+      <div class="row justify-content-between mb-3">
+        <div class="row mb-10" >
+      
+          <div class="col-md-12 no-data mb-10">
+            No Data Available
+          </div>  
+          
+        </div>
+      </div>
+    </div>   
+    
+  </ng-container>
+</div>
+<div class="modal fade" id="ratingModal" tabindex="-1" aria-labelledby="loginModalLabel" aria-hidden="true">
+  <div class="modal-dialog  modal-dialog-centered">
+    <div class="modal-content">
+      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      <div class="modal-header">
+        <h5 class="modal-title">Rate & Review</h5>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <form [formGroup]="ratingForm" (ngSubmit)="ratingFormSubmit()">
+            <div class="col-md-12">
+              <div class="form-group ">
+                <ngx-star-rating formControlName="rating_val" [id]="'rating'"></ngx-star-rating>
+              </div>
+            </div>
+            <div class="col-md-12">
+              <div *ngIf="isRatingSubmitted && fve.rating_val.errors" class="invalid-feedback" style="display:block">
+                <div *ngIf="fve.rating_val.errors.required">Please select rating.</div>
+              </div>
+            </div>
+            <div class="col-md-12">
+              <textarea class="form-control" placeholder="Review" formControlName="review_val" rows="3"></textarea>
+            </div>
+            <div class="col-md-12">
+              <div *ngIf="isRatingSubmitted && fve.review_val.errors" class="invalid-feedback" style="display:block">
+                <div *ngIf="fve.review_val.errors.required">Please enter review.</div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-lg-6">
+                <div class="mb-3 mt-2">
+                  <button class="btn btn-danger" type="submit">Submit</button>
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

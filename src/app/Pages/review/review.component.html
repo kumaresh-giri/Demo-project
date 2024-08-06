@@ -1,0 +1,27 @@
+<div class="inner-title">
+  <h1>Reviews</h1>
+</div>
+<div class="review-wrapper c-padd">
+    <ng-container *ngIf="reviewLists?.length > 0">
+        <div class="review-list d-flex align-items-center" *ngFor="let singleReview of reviewLists; index as i">
+            <div class="review-img">
+              <img [src]="singleReview?.users?.profile_pic ? imageBaseUrl+singleReview?.users?.profile_pic : 'assets/images/avtar.png'"  alt="" />
+            </div>
+            <div class="review-des">
+              <p>{{singleReview?.review_val}}</p>
+              <h4>{{singleReview?.users?.user_name}}</h4>
+              <span>
+                <ng-container *ngFor="let item of [1,1,1,1,1]; let i = index">
+                    <i class="bi bi-star{{i<singleReview?.rating_val ? '-fill': ''}}" ></i>
+                </ng-container>
+              </span>
+            </div>
+        </div>
+    </ng-container>
+    <button class="btn order-list more-btn" (click)="pageno = pageno + 1; fetchReviewLists()"  *ngIf="isShowLoadMore && isShowLoader==0">Load More</button>
+    <div class="row" *ngIf="reviewLists?.length== 0 && isShowLoader == 0">
+      <div class="col-md-12 no-data">
+        No Data Available
+      </div>
+    </div>
+</div>

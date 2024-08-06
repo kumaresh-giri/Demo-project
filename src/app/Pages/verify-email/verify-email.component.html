@@ -1,0 +1,15 @@
+<form [formGroup]="verifyEmailForm" (ngSubmit)="verifyEmailFormSubmit()">
+    <h2>Verify Email</h2>
+    <div class="mb-3">
+      <label class="form-label">OTP</label>
+      <input type="text" class="form-control" formControlName="otp"  [ngClass]="{ 'is-invalid': isVerifyEmailSubmitted && fve.otp.errors }"  />
+      <div *ngIf="isVerifyEmailSubmitted && fve.otp.errors" class="invalid-feedback" style="display:block">
+        <div *ngIf="fve.otp.errors.required">Please enter name.</div>
+      </div>
+    </div>
+    <div class="mb-3">
+      <button type="submit"  class="btn btn-danger">
+        Verify
+      </button>
+    </div>
+  </form>
